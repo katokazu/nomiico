@@ -4,7 +4,7 @@ Database documentation describes persistence models, migrations, and data owners
 
 ## Documents
 
-- [schema.md](schema.md)
+- [schema.md](schema.md): SQLite スキーマ（テーブル定義・索引・マイグレーション方針）
 
 ## Principles
 

@@ -5,6 +5,8 @@ Domain models describe important objects and language used across the product.
 ## Documents
 
 - [restaurant.md](restaurant.md)
+- [tag.md](tag.md)
+- [visit.md](visit.md)
 - [decision-session.md](decision-session.md)
 
 ## Modeling Principles
