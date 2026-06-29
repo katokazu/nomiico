@@ -17,7 +17,7 @@ Make it possible to save restaurants and decide one place to go today from saved
 
 ## Out Of Scope
 
-- Full Google Maps import
+- Full Google Maps import（API 直接連携。ただし軽量版の CSV インポートは MVP 直後の初期拡張で実施 → [csv-import](csv-import.md)）
 - Full Instagram import
 - Reservation flow
 - Social feed
@@ -49,4 +49,5 @@ Make it possible to save restaurants and decide one place to go today from saved
 - [decide-flow.md](decide-flow.md): 決定モード
 - [scoring.md](scoring.md): 「今行くべき」スコア
 - [resurfacing.md](resurfacing.md): 思い出す通知
+- [csv-import.md](csv-import.md): CSV 一括取り込み（MVP 直後の初期拡張）
 

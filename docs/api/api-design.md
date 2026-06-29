@@ -85,6 +85,18 @@ interface CandidateFilter {
 | `listByRestaurant(restaurantId): Promise<Visit[]>` | 履歴 |
 | `updateVisit(id, patch): Promise<Visit>` | 後から評価・メモ追記 |
 
+## ImportRepository
+
+CSV 一括取り込み（[csv-import](../specs/csv-import.md)）。MVP 直後の初期拡張。
+
+| メソッド | 用途 |
+|---|---|
+| `parseCsv(file): Promise<ParsedRow[]>` | CSV 解析（BOM/引用対応）と列推定 |
+| `importBatch(rows, mapping): Promise<ImportResult>` | 列マッピング適用 → 重複判定 → チャンク INSERT。`{ batchId, created, skipped, failed }` |
+| `undoBatch(batchId): Promise<void>` | バッチで新規作成した行のみ削除 |
+
+OGP 補完は同期では行わず、作成行を遅延補完キューへ積む（[save-flow](../specs/save-flow.md) の OGP 経路を再利用）。
+
 ## DecisionRepository
 
 | メソッド | 用途 |

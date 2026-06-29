@@ -15,6 +15,7 @@ Use this file as the router. Read only the documents needed for the current task
 - [specs/decide-flow.md](specs/decide-flow.md)
 - [specs/scoring.md](specs/scoring.md)
 - [specs/resurfacing.md](specs/resurfacing.md)
+- [specs/csv-import.md](specs/csv-import.md)
 
 ### Domain Modeling
 

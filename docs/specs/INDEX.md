@@ -10,6 +10,7 @@ Feature specs and UX flows live here.
 - [decide-flow.md](decide-flow.md): 決定モード（gacha/swipe/roulette）
 - [scoring.md](scoring.md): 「今行くべき」スコア式
 - [resurfacing.md](resurfacing.md): 思い出す（ローカル通知）
+- [csv-import.md](csv-import.md): CSV 一括取り込み（MVP 直後の初期拡張）
 
 ## Template For New Specs
 

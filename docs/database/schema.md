@@ -51,7 +51,8 @@
 | visited | INTEGER | NOT NULL, default 0 | 0/1 |
 | visit_count | INTEGER | NOT NULL, default 0 | 訪問回数 |
 | archived | INTEGER | NOT NULL, default 0 | 0/1 |
-| raw_metadata | TEXT | NULL可 | OGP 生取得結果(JSON 文字列) |
+| raw_metadata | TEXT | NULL可 | OGP 生取得結果 / インポート補助情報(JSON 文字列) |
+| import_batch_id | TEXT | NULL可, FK import_batches.id ON DELETE SET NULL | CSV 取り込み元（[csv-import](../specs/csv-import.md)、Undo 用） |
 | created_at | TEXT | NOT NULL | 保存日時(UTC) |
 | updated_at | TEXT | NOT NULL | 更新日時(UTC) |
 | last_suggested_at | TEXT | NULL可 | 最後に提案した日時 |
@@ -106,6 +107,22 @@ PK (restaurant_id, tag_id)。インデックス `idx_restaurant_tags_tag` (tag_i
 | created_at | TEXT | NOT NULL | |
 
 インデックス `idx_visits_restaurant` (restaurant_id)。
+
+### import_batches
+
+CSV 一括取り込みの単位（[csv-import](../specs/csv-import.md)）。Undo（取り込み取り消し）の境界。MVP 直後の初期拡張で追加。
+
+| カラム | 型 | 制約 | 説明 |
+|---|---|---|---|
+| id | TEXT | PK | UUID |
+| owner_id | TEXT | NOT NULL, FK | |
+| source_label | TEXT | NULL可 | 取り込み元種別（例 `google_takeout`） |
+| file_name | TEXT | NULL可 | 取り込んだファイル名 |
+| created_count | INTEGER | NOT NULL, default 0 | 新規作成件数 |
+| skipped_count | INTEGER | NOT NULL, default 0 | 重複等スキップ件数 |
+| created_at | TEXT | NOT NULL | |
+
+インデックス `idx_import_batches_owner` (owner_id)。Undo は `restaurants.import_batch_id = ?` の新規行を削除。
 
 ### decision_sessions
 

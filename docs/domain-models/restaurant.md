@@ -14,6 +14,7 @@
 | 一次情報 | `name`(暫定可), `source_url`, `source_type`, `normalized_url` |
 | 補完メタ | `thumbnail_url`, `genre`, `area`, `nearest_station`, `address`, `price_range`, `raw_metadata` |
 | 状態 | `desire_level`(1..5), `visited`, `visit_count`, `archived` |
+| 取込 | `import_batch_id`（CSV 一括取り込み元、[csv-import](../specs/csv-import.md)） |
 | 日時 | `created_at`, `updated_at`, `last_suggested_at`, `last_visited_at` |
 
 ## source_type
