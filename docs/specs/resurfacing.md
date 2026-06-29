@@ -37,8 +37,8 @@ MVP で見送り（座標/天気が必要）:
 
 ## Functional Requirements
 
-- 通知許可は初回保存より後の適切なタイミングで要求（初回起動でいきなり求めない＝入力/許可を求めない思想）。
-- 通知設定（頻度・時間帯・ON/OFF）を設定画面に置く。
+- 通知許可は初回保存より後の適切なタイミングで要求（初回起動でいきなり求めない＝入力/許可を求めない思想）。具体UXは初回保存後の文脈付きシート（[home-and-decision-ux](home-and-decision-ux.md) §設定、[mockups/detail-input-settings.html](../../mockups/detail-input-settings.html)）。
+- 通知設定（頻度・時間帯・ON/OFF）を設定画面に置く。設定はホーム右上の歯車から入る（[home-and-decision-ux](home-and-decision-ux.md) §設定とその入口）。
 - 通知発火時に `last_suggested_at` を更新し、短期間の重複提案を防ぐ。
 
 ## Edge Cases

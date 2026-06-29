@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>フローモック ── 保存タブ / 記録(思い出) / スキップ後</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+    background: #eceef1; color:#1a1d21; padding: 40px 24px 100px; -webkit-font-smoothing: antialiased;
+  }
+  .page-head { max-width: 1100px; margin: 0 auto 8px; }
+  .page-head h1 { font-size: 26px; }
+  .page-head p { margin-top: 10px; color:#5b626b; font-size:14px; line-height:1.85; max-width:860px; }
+  .page-head .note { margin-top:14px; background:#fff; border-left:4px solid #b5482f; border-radius:0 10px 10px 0; padding:12px 16px; font-size:13px; color:#5b626b; line-height:1.8; max-width:860px; }
+
+  /* flow section */
+  .flow { max-width: 1340px; margin: 0 auto 64px; }
+  .flow > h2 { font-size:18px; margin-bottom:4px; }
+  .flow > .lead { font-size:13px; color:#5b626b; margin-bottom:24px; line-height:1.7; max-width:840px; }
+  .row { display:flex; flex-wrap:wrap; align-items:center; gap:16px; }
+  .arrow { display:flex; flex-direction:column; align-items:center; gap:4px; color:#9aa1ab; min-width:54px; }
+  .arrow .a { font-size:26px; }
+  .arrow .t { font-size:11px; font-weight:700; text-align:center; line-height:1.4; }
+
+  .unit { width: 320px; }
+  .unit .cap { font-size:13px; font-weight:800; margin-bottom:8px; }
+  .unit .cap .badge { font-size:11px; font-weight:700; color:#fff; background:#b5482f; padding:2px 8px; border-radius:6px; margin-right:7px; }
+  .unit .cap .badge.alt { background:#2f7d4f; }
+  .unit .cap .badge.warn { background:#c08a2a; }
+
+  /* phone (scaled to 320) */
+  .phone { width:320px; height:656px; border-radius:38px; background:#000; padding:10px;
+    box-shadow:0 22px 50px -20px rgba(0,0,0,.45), 0 4px 12px rgba(0,0,0,.2); position:relative; }
+  .screen { width:100%; height:100%; border-radius:29px; overflow:hidden; position:relative; display:flex; flex-direction:column;
+    background:#faf7f2; color:#2a2622; }
+  .notch { position:absolute; top:0; left:50%; transform:translateX(-50%); width:110px; height:22px; background:#000; border-radius:0 0 15px 15px; z-index:50; }
+  .statusbar { height:38px; flex:0 0 38px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; font-size:12px; font-weight:600; }
+  .content { flex:1; overflow:hidden; position:relative; display:flex; flex-direction:column; }
+  .tabbar { flex:0 0 52px; display:flex; align-items:center; justify-content:space-around; font-size:9px; padding-bottom:6px; }
+  .tabbar .ti { display:flex; flex-direction:column; align-items:center; gap:3px; opacity:.5; }
+  .tabbar .ti.on { opacity:1; color:#b5482f; }
+  .tabbar .ti .ic { font-size:16px; }
+
+  /* shared bits */
+  .topbar { flex:0 0 auto; padding:8px 20px 4px; display:flex; align-items:center; justify-content:space-between; }
+  .topbar .back { font-size:18px; color:#8a7a66; }
+  .topbar .ttl { font-size:14px; font-weight:800; }
+  .topbar .sp { width:18px; }
+  .pill { font-size:10px; color:#a08d76; background:#f0eae1; padding:4px 9px; border-radius:999px; font-weight:700; }
+  .stars { color:#e0a32e; }
+  .primary { background:#b5482f; color:#fff; text-align:center; padding:13px; border-radius:13px; font-weight:800; font-size:14px; }
+  .ghost { background:#f0eae1; color:#8a7a66; text-align:center; padding:12px; border-radius:13px; font-weight:700; font-size:13px; }
+  .head { flex:0 0 auto; padding:10px 20px 4px; display:flex; justify-content:space-between; align-items:baseline; }
+  .head .d { font-size:10px; color:#a08d76; letter-spacing:.14em; font-weight:800; }
+  .head .t { font-size:18px; font-weight:800; margin-top:2px; }
+
+  /* ================= 保存タブ ================= */
+  .saved { display:flex; flex-direction:column; height:100%; }
+  .saved .lhead { padding:10px 18px 6px; display:flex; justify-content:space-between; align-items:baseline; }
+  .saved .lhead .t { font-size:18px; font-weight:800; }
+  .saved .lhead .n { font-size:11px; color:#a08d76; font-weight:700; }
+  /* リストを「決める」入力に変える上部バー */
+  .decidebar { margin:2px 16px 0; background:#b5482f; color:#fff; border-radius:14px; padding:10px 12px; display:flex; align-items:center; gap:9px; box-shadow:0 10px 24px -16px rgba(181,72,47,.9); }
+  .decidebar .ic { font-size:17px; }
+  .decidebar .tx { font-size:12px; font-weight:800; flex:1; line-height:1.35; }
+  .decidebar .tx small { display:block; font-weight:600; opacity:.85; font-size:10px; margin-top:1px; }
+  .decidebar .go { font-size:11px; font-weight:800; background:rgba(255,255,255,.22); padding:6px 11px; border-radius:999px; white-space:nowrap; }
+  /* 並べ替え/絞り込みチップ */
+  .sortrow { padding:11px 16px 4px; display:flex; gap:7px; overflow:hidden; }
+  .sortrow .ch { font-size:11px; padding:6px 11px; border-radius:999px; background:#fff; border:1.5px solid #ece3d4; font-weight:700; color:#6a5d4a; white-space:nowrap; }
+  .sortrow .ch.on { background:#2a2622; border-color:#2a2622; color:#fff; }
+  .sortrow .ch .cnt { opacity:.6; font-weight:800; margin-left:3px; }
+  .sortrow .ch.arch { margin-left:auto; color:#a08d76; border-style:dashed; }
+  /* リスト項目のスワイプでアーカイブ（手がかり表示） */
+  .litem.swiped { transform:translateX(-58px); position:relative; }
+  .archpeek { position:absolute; right:16px; top:0; bottom:9px; width:58px; background:#cdc3b2; border-radius:0 13px 13px 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:#fff; font-size:9px; font-weight:800; }
+  .archpeek .i { font-size:16px; }
+  .swipewrap { position:relative; margin-bottom:9px; }
+  .swipewrap .litem { margin-bottom:0; }
+  /* アーカイブ別ビュー */
+  .archview { display:flex; flex-direction:column; height:100%; }
+  .archview .ahint { margin:2px 16px 0; background:#f3ece0; border-radius:11px; padding:9px 12px; font-size:11px; color:#8a7a66; line-height:1.5; font-weight:600; }
+  .archview .lscroll .litem { opacity:.92; }
+  .archview .litem .th, .archview .litem .th.v2, .archview .litem .th.v3 { filter:grayscale(.5) brightness(.96); }
+  .archview .restore { margin-left:auto; font-size:10px; font-weight:800; color:#b5482f; background:#f7e7e1; padding:5px 10px; border-radius:999px; white-space:nowrap; }
+  /* 寝かせ候補の再浮上 */
+  .sleep { margin:10px 16px 0; }
+  .sleep .sl { font-size:11px; font-weight:800; color:#8a7a66; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .sleep .sl .tag { font-size:9px; color:#fff; background:#c08a2a; padding:2px 7px; border-radius:6px; }
+  .lscroll { flex:1; overflow:hidden; padding:4px 16px 6px; }
+  .litem { background:#fff; border-radius:13px; padding:9px 11px; margin-bottom:9px; display:flex; align-items:center; gap:11px; box-shadow:0 6px 16px -14px rgba(80,60,30,.6); }
+  .litem .th { width:46px; height:46px; border-radius:10px; flex:0 0 auto; background:linear-gradient(135deg,#c9a36b,#7c5a3a); position:relative; }
+  .litem .th.v2 { background:linear-gradient(135deg,#8c6f4a,#3a2c22); }
+  .litem .th.v3 { background:linear-gradient(135deg,#b98a5a,#6a4a30); }
+  .litem .th.none { background:#efe7d8; display:flex; align-items:center; justify-content:center; font-size:16px; color:#c9bca5; }
+  .litem .mid { flex:1; min-width:0; }
+  .litem .nm { font-size:13px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .litem .su { font-size:10px; color:#a08d76; margin-top:3px; }
+  .litem .meta { display:flex; align-items:center; gap:6px; margin-top:5px; }
+  .litem .meta .st { font-size:10px; }
+  .litem .meta .age { font-size:9px; color:#b3a387; font-weight:700; }
+  .litem .meta .v { font-size:9px; font-weight:800; color:#2f7d4f; background:#e6f0e9; padding:1px 6px; border-radius:5px; }
+  .litem .meta .old { font-size:9px; font-weight:800; color:#a9772a; background:#f6ecd6; padding:1px 6px; border-radius:5px; }
+  .litem .chev { color:#d9cdb6; font-size:16px; }
+  .fab { position:absolute; right:16px; bottom:14px; width:50px; height:50px; border-radius:50%; background:#b5482f; color:#fff; display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 12px 26px -10px rgba(181,72,47,.9); z-index:10; }
+
+  /* 絞り込み選択モード（決めるへ渡す） */
+  .selbar { margin:2px 16px 0; background:#2a2622; color:#fff; border-radius:14px; padding:10px 13px; display:flex; align-items:center; gap:10px; }
+  .selbar .c { font-size:13px; font-weight:800; flex:1; }
+  .selbar .c small { font-weight:600; opacity:.7; font-size:10px; }
+  .litem.sel { border:2px solid #b5482f; }
+  .litem .ck { width:22px; height:22px; border-radius:50%; border:2px solid #e0d6c4; flex:0 0 auto; }
+  .litem .ck.on { background:#b5482f; border-color:#b5482f; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; }
+  .selfoot { padding:10px 16px 14px; display:flex; gap:8px; }
+  .selfoot .primary { flex:1; }
+  .selfoot .alt { background:#f0eae1; color:#8a7a66; text-align:center; padding:13px; border-radius:13px; font-weight:800; font-size:13px; flex:1; }
+
+  /* ================= 記録タブ（思い出） ================= */
+  .mem { display:flex; flex-direction:column; height:100%; }
+  .mem .mstat { margin:8px 16px 2px; background:#fff; border-radius:14px; padding:12px 14px; display:flex; box-shadow:0 6px 16px -14px rgba(80,60,30,.6); }
+  .mem .mstat .col { flex:1; text-align:center; }
+  .mem .mstat .col + .col { border-left:1px solid #f0eae1; }
+  .mem .mstat .num { font-size:20px; font-weight:800; }
+  .mem .mstat .lb { font-size:9px; color:#a08d76; font-weight:700; margin-top:2px; }
+  .mscroll { flex:1; overflow:hidden; padding:6px 16px 6px; }
+  .mmonth { font-size:11px; font-weight:800; color:#a08d76; margin:10px 2px 8px; letter-spacing:.04em; }
+  .vcard { background:#fff; border-radius:14px; overflow:hidden; margin-bottom:11px; box-shadow:0 8px 20px -16px rgba(80,60,30,.6); }
+  .vcard .ph { height:96px; background:linear-gradient(135deg,#c9a36b,#7c5a3a); position:relative; display:flex; align-items:flex-end; padding:9px 11px; }
+  .vcard .ph.v2 { background:linear-gradient(135deg,#8c6f4a,#3a2c22); }
+  .vcard .ph:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.5)); }
+  .vcard .ph .nm { position:relative; z-index:2; color:#fff; font-size:15px; font-weight:800; text-shadow:0 2px 8px rgba(0,0,0,.5); }
+  .vcard .ph .dt { position:absolute; top:9px; right:11px; z-index:2; color:#fff; font-size:10px; font-weight:700; background:rgba(0,0,0,.4); padding:3px 8px; border-radius:999px; }
+  .vcard .b { padding:10px 12px 12px; }
+  .vcard .l1 { display:flex; align-items:center; gap:8px; }
+  .vcard .l1 .st { font-size:13px; }
+  .vcard .l1 .re { margin-left:auto; font-size:9px; font-weight:800; color:#2f7d4f; background:#e6f0e9; padding:2px 8px; border-radius:6px; }
+  .vcard .l1 .re.no { color:#a08d76; background:#f0eae1; }
+  .vcard .memo { font-size:11px; color:#6a5d4a; line-height:1.6; margin-top:8px; }
+  .vcard .l2 { display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+  .vcard .l2 span { font-size:9px; background:#f0eae1; color:#8a7a66; padding:3px 8px; border-radius:999px; font-weight:700; }
+  /* テキストのみ記録（写真なし）の軽量カード */
+  .vcard.text .b { padding:11px 13px 12px; }
+  .vcard.text .nmt { font-size:14px; font-weight:800; }
+  .vcard.text .dtt { font-size:10px; color:#a08d76; font-weight:700; }
+
+  /* 思い出カード詳細 */
+  .mdetail { display:flex; flex-direction:column; height:100%; }
+  .mdetail .hero { height:170px; background:linear-gradient(135deg,#8c6f4a,#3a2c22); position:relative; display:flex; align-items:flex-end; padding:14px; flex:0 0 auto; }
+  .mdetail .hero:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.6)); }
+  .mdetail .hero .nm { position:relative; z-index:2; color:#fff; font-size:22px; font-weight:800; text-shadow:0 2px 10px rgba(0,0,0,.5); }
+  .mdetail .hero .back { position:absolute; top:14px; left:14px; z-index:3; color:#fff; font-size:20px; }
+  .mbody { flex:1; overflow:hidden; padding:14px 18px; display:flex; flex-direction:column; }
+  .mbody .row1 { display:flex; align-items:center; gap:10px; }
+  .mbody .row1 .big { font-size:26px; letter-spacing:3px; }
+  .mbody .row1 .dt { margin-left:auto; font-size:11px; color:#a08d76; font-weight:700; }
+  .mbody .reband { margin-top:12px; background:#e6f0e9; color:#2f7d4f; border-radius:11px; padding:9px 12px; font-size:12px; font-weight:800; display:flex; align-items:center; gap:7px; }
+  .mbody .fld { margin-top:14px; }
+  .mbody .fld .k { font-size:10px; font-weight:800; color:#8a7a66; margin-bottom:5px; }
+  .mbody .fld .memo { font-size:12px; color:#4a4036; line-height:1.75; }
+  .mbody .fld .who { display:flex; gap:6px; }
+  .mbody .fld .who span { font-size:11px; background:#f0eae1; color:#8a7a66; padding:5px 10px; border-radius:999px; font-weight:700; }
+  .mbody .acts { margin-top:auto; display:flex; flex-direction:column; gap:9px; }
+  .mbody .again { background:#b5482f; color:#fff; text-align:center; padding:13px; border-radius:13px; font-weight:800; font-size:14px; }
+  .mbody .editline { text-align:center; font-size:11px; color:#b3a387; font-weight:700; }
+
+  /* 記録タブ 空状態 */
+  .empty { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; padding:30px; }
+  .empty .ic { font-size:46px; opacity:.5; }
+  .empty .t { font-size:16px; font-weight:800; margin-top:14px; }
+  .empty .s { font-size:12px; color:#a08d76; margin-top:8px; line-height:1.7; }
+
+  /* ================= スキップ後 ================= */
+  /* ヒーロー（ホーム流用） */
+  .hero { margin:4px 16px 0; border-radius:18px; overflow:hidden; background:#fff; flex:0 0 auto; box-shadow:0 14px 34px -22px rgba(80,60,30,.5); }
+  .hero .img { height:120px; background:linear-gradient(135deg,#b98a5a,#6a4a30); position:relative; display:flex; align-items:flex-end; padding:12px; color:#fff; }
+  .hero .img:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.55)); }
+  .hero .img .badge { position:absolute; top:11px; left:11px; z-index:2; background:rgba(0,0,0,.5); padding:5px 10px; border-radius:999px; font-size:11px; font-weight:800; }
+  .hero .img .nm { position:relative; z-index:2; font-size:21px; font-weight:800; text-shadow:0 2px 10px rgba(0,0,0,.5); }
+  .hero .body { padding:11px 15px 14px; }
+  .data { display:flex; flex-direction:column; gap:6px; }
+  .data .r { display:flex; justify-content:space-between; font-size:12px; }
+  .data .r .k { color:#a08d76; } .data .r .v { font-weight:700; }
+  .tags { margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
+  .tags span { font-size:10px; background:#f0eae1; color:#8a7a66; padding:4px 9px; border-radius:999px; font-weight:700; }
+  .cta { margin-top:12px; display:flex; gap:8px; }
+  .cta .primary { flex:1; }
+  .cta .skip { width:48px; display:flex; align-items:center; justify-content:center; background:#f0eae1; color:#8a7a66; border-radius:13px; font-size:11px; font-weight:700; }
+  .modes { padding:14px 20px 12px; margin-top:auto; }
+  .modes .mt { font-size:12px; font-weight:800; color:#8a7a66; margin-bottom:9px; }
+  .modes .mrow { display:flex; gap:8px; }
+  .modes .c { flex:1; background:#fff; border-radius:14px; padding:11px 6px; text-align:center; box-shadow:0 6px 16px -14px rgba(80,60,30,.6); }
+  .modes .c .ci { font-size:21px; } .modes .c .cl { font-size:11px; font-weight:800; margin-top:5px; } .modes .c .cs { font-size:9px; color:#a08d76; margin-top:2px; }
+  /* スキップ直後の差し替えトースト */
+  .skiptoast { margin:8px 16px 0; background:#2a2622; color:#fff; border-radius:12px; padding:9px 13px; display:flex; align-items:center; gap:10px; }
+  .skiptoast .tx { font-size:11px; font-weight:700; flex:1; line-height:1.4; }
+  .skiptoast .tx small { display:block; opacity:.7; font-weight:600; font-size:9px; margin-top:1px; }
+  .skiptoast .undo { font-size:11px; font-weight:800; color:#f0c8b8; }
+  /* 出し尽くし状態 */
+  .exhaust { display:flex; flex-direction:column; height:100%; padding:0 0 12px; }
+  .exhaust .ill { flex:0 0 auto; text-align:center; padding:34px 20px 6px; }
+  .exhaust .ill .ic { font-size:46px; }
+  .exhaust .ill .t { font-size:17px; font-weight:800; margin-top:14px; }
+  .exhaust .ill .s { font-size:12px; color:#a08d76; margin-top:8px; line-height:1.7; }
+  .exhaust .opts { padding:14px 20px 0; }
+  .exhaust .opts .ol { font-size:11px; font-weight:800; color:#8a7a66; margin-bottom:9px; }
+  .exhaust .mrow { display:flex; gap:8px; }
+  .exhaust .c { flex:1; background:#fff; border-radius:14px; padding:12px 6px; text-align:center; box-shadow:0 6px 16px -14px rgba(80,60,30,.6); }
+  .exhaust .c .ci { font-size:20px; } .exhaust .c .cl { font-size:11px; font-weight:800; margin-top:5px; }
+  .exhaust .foot { margin-top:auto; padding:0 20px; }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>フローモック ── 保存タブ / 記録(思い出) / スキップ後</h1>
+    <p>
+      ホーム〜決定〜記録のフロー（<b>home-flow.html</b>）に続き、タブバーの残り2タブ（<b>保存 / 記録</b>）と、
+      ホームの<b>スキップ後の挙動</b>をモック化したものです。ビジュアルはB案リファインを継承。
+      表示データはアプリ内のものに限定し、各画面はスクロールなしで主要部が収まる構成です。
+    </p>
+    <div class="note">
+      <b>設計の軸:</b> 保存タブは「集めた一覧」を眺める場所にしない。<b>一覧をそのまま「決める」入力に変える</b>こと、
+      埋もれた<b>寝かせ候補を再浮上</b>させることを主役に置く。記録タブは管理表ではなく<b>思い出が自然に積もる</b>場所にする。
+    </div>
+  </div>
+
+  <!-- ============ 1. 保存タブ ============ -->
+  <div class="flow">
+    <h2>1. 保存タブ ── 一覧を「決める」入力に変える</h2>
+    <p class="lead">
+      MVP必須の保存一覧。ただしGoogleマップの保存ピンの劣化版にしない。最上部に<b>「この一覧から決める」</b>を常設し、
+      並べ替え（行きたい度／古い順／未訪問）で母数を整えたら、そのままスワイプ・ガチャへ流せる。
+      埋もれた古い候補は<b>「寝かせ中」</b>として上部に再浮上させる。
+      もう行かないと決めた店は<b>左スワイプでアーカイブ</b>し、デフォルト一覧と抽選母数から外す。アーカイブは並べ替え行末の控えめな入口から別ビューで見返し、いつでも戻せる。
+    </p>
+    <div class="row">
+
+      <div class="unit">
+        <div class="cap"><span class="badge">保存</span>デフォルト：寝かせ候補を上に</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="content"><div class="saved">
+            <div class="lhead"><div class="t">保存したお店</div><div class="n">未訪問 38 ・ 訪問済 12</div></div>
+            <div class="decidebar">
+              <span class="ic">🎯</span>
+              <span class="tx">この一覧から決める<small>並べ替え・絞り込みのまま決定モードへ</small></span>
+              <span class="go">決める →</span>
+            </div>
+            <div class="sortrow">
+              <span class="ch on">行きたい度</span>
+              <span class="ch">古い順</span>
+              <span class="ch">未訪問<span class="cnt">38</span></span>
+              <span class="ch">エリア</span>
+              <span class="ch arch">🗄 アーカイブ</span>
+            </div>
+            <div class="sleep">
+              <div class="sl"><span class="tag">寝かせ中</span>90日以上ねむっている候補</div>
+            </div>
+            <div class="lscroll">
+              <div class="litem">
+                <div class="th"></div>
+                <div class="mid">
+                  <div class="nm">大衆酒場 ことぶき</div>
+                  <div class="su">焼鳥 ・ 渋谷</div>
+                  <div class="meta"><span class="st stars">★★★★★</span><span class="old">保存143日</span></div>
+                </div>
+                <div class="chev">›</div>
+              </div>
+              <div class="litem">
+                <div class="th v2"></div>
+                <div class="mid">
+                  <div class="nm">スパイス食堂</div>
+                  <div class="su">カレー ・ 神泉</div>
+                  <div class="meta"><span class="st stars">★★★★☆</span><span class="old">保存118日</span></div>
+                </div>
+                <div class="chev">›</div>
+              </div>
+              <div class="litem">
+                <div class="th v3"></div>
+                <div class="mid">
+                  <div class="nm">炭火 とり源</div>
+                  <div class="su">焼鳥 ・ 渋谷</div>
+                  <div class="meta"><span class="st stars">★★★★★</span><span class="age">保存89日</span></div>
+                </div>
+                <div class="chev">›</div>
+              </div>
+              <div class="swipewrap">
+                <div class="archpeek"><span class="i">🗄</span>アーカイブ</div>
+                <div class="litem swiped">
+                  <div class="th none">🍽</div>
+                  <div class="mid">
+                    <div class="nm">立ち飲み まる</div>
+                    <div class="su">居酒屋 ・ 渋谷</div>
+                    <div class="meta"><span class="st stars">★★★★☆</span><span class="age">保存54日</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="fab">＋</div>
+          </div></div>
+          <div class="tabbar"><div class="ti"><span class="ic">🏠</span>ホーム</div><div class="ti on"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+      <div class="arrow"><div class="a">→</div><div class="t">決める<br>を押す</div></div>
+
+      <div class="unit">
+        <div class="cap"><span class="badge">保存</span>選んで決定モードへ渡す</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="content"><div class="saved">
+            <div class="selbar"><span class="c">決める母数を選ぶ<small> ／ 全部のままでもOK</small></span><span class="pill" style="background:rgba(255,255,255,.18);color:#fff">3 / 38</span></div>
+            <div class="sortrow">
+              <span class="ch on">未訪問</span>
+              <span class="ch on">渋谷</span>
+              <span class="ch">焼鳥</span>
+              <span class="ch">〜4千</span>
+            </div>
+            <div class="lscroll">
+              <div class="litem sel">
+                <div class="ck on">✓</div>
+                <div class="mid"><div class="nm">大衆酒場 ことぶき</div><div class="su">焼鳥 ・ 渋谷 ・ ¥3,000</div></div>
+              </div>
+              <div class="litem sel">
+                <div class="ck on">✓</div>
+                <div class="mid"><div class="nm">炭火 とり源</div><div class="su">焼鳥 ・ 渋谷 ・ ¥3,500</div></div>
+              </div>
+              <div class="litem sel">
+                <div class="ck on">✓</div>
+                <div class="mid"><div class="nm">立ち飲み まる</div><div class="su">居酒屋 ・ 渋谷 ・ ¥2,000</div></div>
+              </div>
+              <div class="litem">
+                <div class="ck"></div>
+                <div class="mid"><div class="nm">餃子の高橋</div><div class="su">中華 ・ 渋谷 ・ ¥1,800</div></div>
+              </div>
+            </div>
+            <div class="selfoot">
+              <div class="alt">🃏 スワイプ</div>
+              <div class="primary">🎲 ガチャで決める</div>
+            </div>
+          </div></div>
+          <div class="tabbar"><div class="ti"><span class="ic">🏠</span>ホーム</div><div class="ti on"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+      <div class="arrow"><div class="a">→</div><div class="t">アーカイブ<br>を開く</div></div>
+
+      <div class="unit">
+        <div class="cap"><span class="badge">保存</span>アーカイブ（別ビュー・いつでも戻せる）</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="topbar"><span class="back">‹</span><span class="ttl">アーカイブ</span><span class="pill">14</span></div>
+          <div class="content"><div class="archview">
+            <div class="ahint">もう行かない／興味が薄れた店。今日の一店やガチャの抽選には出てきません。戻せばまた候補に復活します。</div>
+            <div class="lscroll">
+              <div class="litem">
+                <div class="th"></div>
+                <div class="mid"><div class="nm">old カフェ にしき</div><div class="su">カフェ ・ 表参道</div></div>
+                <div class="restore">↩ 戻す</div>
+              </div>
+              <div class="litem">
+                <div class="th v2"></div>
+                <div class="mid"><div class="nm">閉店した洋食 ポプラ</div><div class="su">洋食 ・ 新宿</div></div>
+                <div class="restore">↩ 戻す</div>
+              </div>
+              <div class="litem">
+                <div class="th none">🍽</div>
+                <div class="mid"><div class="nm">行ってみたが微妙だった店</div><div class="su">ラーメン ・ 池袋</div></div>
+                <div class="restore">↩ 戻す</div>
+              </div>
+            </div>
+          </div></div>
+          <div class="tabbar"><div class="ti"><span class="ic">🏠</span>ホーム</div><div class="ti on"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ 2. 記録タブ（思い出） ============ -->
+  <div class="flow">
+    <h2>2. 記録タブ ── 思い出として自然に積もる</h2>
+    <p class="lead">
+      記録は管理表ではなく<b>振り返って嬉しい思い出</b>として設計する。月別タイムラインで訪問が積もり、星ひとつの記録でも成立。
+      写真・メモ・同行者は任意で後追加。<b>「また行きたい」</b>と残した店はここから再決定でき、再浮上のきっかけにもなる。
+    </p>
+    <div class="row">
+
+      <div class="unit">
+        <div class="cap"><span class="badge alt">記録</span>思い出タイムライン</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="content"><div class="mem">
+            <div class="lhead" style="padding:10px 18px 4px"><div class="t">思い出</div><div class="n">2026年</div></div>
+            <div class="mstat">
+              <div class="col"><div class="num">24</div><div class="lb">今年の訪問</div></div>
+              <div class="col"><div class="num">18</div><div class="lb">また行きたい</div></div>
+              <div class="col"><div class="num">★4.3</div><div class="lb">平均評価</div></div>
+            </div>
+            <div class="mscroll">
+              <div class="mmonth">6月</div>
+              <div class="vcard">
+                <div class="ph"><span class="dt">6/30</span><span class="nm">大衆酒場 ことぶき</span></div>
+                <div class="b">
+                  <div class="l1"><span class="st stars">★★★★★</span><span class="re">また行きたい</span></div>
+                  <div class="memo">レバー最高だった。次は個室を予約して4人で。</div>
+                  <div class="l2"><span>👥 たくみ・ゆい</span><span>焼鳥</span></div>
+                </div>
+              </div>
+              <div class="vcard text">
+                <div class="b">
+                  <div class="l1"><span class="nmt">スパイス食堂</span><span class="re no" style="margin-left:auto">うーん</span></div>
+                  <div class="dtt" style="margin-top:4px">6/22 ・ カレー ・ 神泉</div>
+                  <div class="l1" style="margin-top:8px"><span class="st stars">★★★☆☆</span></div>
+                </div>
+              </div>
+              <div class="mmonth">5月</div>
+              <div class="vcard">
+                <div class="ph v2"><span class="dt">5/18</span><span class="nm">炭火 とり源</span></div>
+                <div class="b">
+                  <div class="l1"><span class="st stars">★★★★☆</span><span class="re">また行きたい</span></div>
+                  <div class="l2"><span>👤 ひとり</span><span>焼鳥</span></div>
+                </div>
+              </div>
+            </div>
+          </div></div>
+          <div class="tabbar"><div class="ti"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti on"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+      <div class="arrow"><div class="a">→</div><div class="t">カードを<br>開く</div></div>
+
+      <div class="unit">
+        <div class="cap"><span class="badge alt">記録</span>思い出カード（また行きたいで再決定）</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="content"><div class="mdetail">
+            <div class="hero"><span class="back">‹</span><span class="nm">大衆酒場<br>ことぶき</span></div>
+            <div class="mbody">
+              <div class="row1"><span class="big stars">★★★★★</span><span class="dt">2026年6月30日</span></div>
+              <div class="reband">♥ また行きたい店に入っています</div>
+              <div class="fld">
+                <div class="k">メモ</div>
+                <div class="memo">レバー最高だった。次は個室を予約して4人で。締めのおにぎりも頼むこと。</div>
+              </div>
+              <div class="fld">
+                <div class="k">一緒に行った</div>
+                <div class="who"><span>👥 たくみ</span><span>👥 ゆい</span></div>
+              </div>
+              <div class="acts">
+                <div class="again">またここにする → 🗺</div>
+                <div class="editline">写真・メモを追加する</div>
+              </div>
+            </div>
+          </div></div>
+          <div class="tabbar"><div class="ti"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti on"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+      <div class="arrow"><div class="a">＝</div><div class="t">記録が<br>0件なら</div></div>
+
+      <div class="unit">
+        <div class="cap"><span class="badge alt">記録</span>空状態（入力を急かさない）</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="content"><div class="empty">
+            <div class="ic">🍽</div>
+            <div class="t">まだ思い出はありません</div>
+            <div class="s">行ったお店を記録すると、ここに思い出が積もっていきます。<br>まずは今日の一店を決めて、出かけてみましょう。</div>
+            <div class="primary" style="margin-top:22px; padding:12px 22px">今日の一店を見る →</div>
+          </div></div>
+          <div class="tabbar"><div class="ti"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti on"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ 3. スキップ後の挙動 ============ -->
+  <div class="flow">
+    <h2>3. スキップ後の挙動 ── 即座に次の一店へ（未決事項の決定）</h2>
+    <p class="lead">
+      <b>方針:</b> 「今日の一店」のスキップは、<b>当日再表示しないのではなく、即座に別の一店へ差し替える</b>。決める流れを止めないことを優先する。
+      スキップした店は <code>last_suggested_at</code> を更新して当面は出さず、軽いトースト＋取り消しで誤操作を救う。
+      母数を出し尽くしたら、決定モードか保存を増やす導線に着地させる。
+    </p>
+    <div class="row">
+
+      <div class="unit">
+        <div class="cap"><span class="badge">ホーム</span>スキップ前</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="content">
+            <div class="head"><div><div class="d">TUE · 6月30日</div><div class="t">今日の一店</div></div><div class="pill">38店から抽選</div></div>
+            <div class="hero">
+              <div class="img"><div class="badge">行きたい度 <span class="stars">★★★★★</span></div><div class="nm">大衆酒場 ことぶき</div></div>
+              <div class="body">
+                <div class="data">
+                  <div class="r"><span class="k">ジャンル</span><span class="v">焼鳥</span></div>
+                  <div class="r"><span class="k">エリア</span><span class="v">渋谷 / 徒歩6分</span></div>
+                  <div class="r"><span class="k">保存してから</span><span class="v">143日</span></div>
+                </div>
+                <div class="tags"><span>友達</span><span>飲み会</span><span>駅近</span></div>
+                <div class="cta"><div class="primary">今日はここにする →</div><div class="skip">スキップ</div></div>
+              </div>
+            </div>
+            <div class="modes">
+              <div class="mt">気分で選ぶ</div>
+              <div class="mrow">
+                <div class="c"><div class="ci">🎲</div><div class="cl">ガチャ</div><div class="cs">おまかせ1店</div></div>
+                <div class="c"><div class="ci">🃏</div><div class="cl">スワイプ</div><div class="cs">絞り込む</div></div>
+                <div class="c"><div class="ci">👥</div><div class="cl">みんなで</div><div class="cs">投票・順位</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar"><div class="ti on"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+      <div class="arrow"><div class="a">→</div><div class="t">スキップ<br>を押す</div></div>
+
+      <div class="unit">
+        <div class="cap"><span class="badge">ホーム</span>即差し替え＋取り消しトースト</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="content">
+            <div class="skiptoast">
+              <span class="tx">「ことぶき」はまた今度<small>当面は出ません</small></span>
+              <span class="undo">↩ 取り消す</span>
+            </div>
+            <div class="head"><div><div class="d">TUE · 6月30日</div><div class="t">今日の一店</div></div><div class="pill">残り37店</div></div>
+            <div class="hero">
+              <div class="img"><div class="badge">行きたい度 <span class="stars">★★★★☆</span></div><div class="nm">スパイス食堂</div></div>
+              <div class="body">
+                <div class="data">
+                  <div class="r"><span class="k">ジャンル</span><span class="v">カレー</span></div>
+                  <div class="r"><span class="k">エリア</span><span class="v">神泉 / 徒歩4分</span></div>
+                  <div class="r"><span class="k">保存してから</span><span class="v">118日</span></div>
+                </div>
+                <div class="tags"><span>一人</span><span>昼</span></div>
+                <div class="cta"><div class="primary">今日はここにする →</div><div class="skip">スキップ</div></div>
+              </div>
+            </div>
+            <div class="modes">
+              <div class="mt">気分で選ぶ</div>
+              <div class="mrow">
+                <div class="c"><div class="ci">🎲</div><div class="cl">ガチャ</div><div class="cs">おまかせ1店</div></div>
+                <div class="c"><div class="ci">🃏</div><div class="cl">スワイプ</div><div class="cs">絞り込む</div></div>
+                <div class="c"><div class="ci">👥</div><div class="cl">みんなで</div><div class="cs">投票・順位</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar"><div class="ti on"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+      <div class="arrow"><div class="a">→</div><div class="t">何度も<br>スキップ</div></div>
+
+      <div class="unit">
+        <div class="cap"><span class="badge warn">ホーム</span>出し尽くし状態への着地</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="statusbar"><span>9:41</span><span>📶</span></div>
+          <div class="content"><div class="exhaust">
+            <div class="ill">
+              <div class="ic">🍃</div>
+              <div class="t">今日はひと通り見ました</div>
+              <div class="s">候補をぜんぶスキップしました。<br>気分を変えて決めるか、新しいお店を足してみては。</div>
+            </div>
+            <div class="opts">
+              <div class="ol">気分を変えて決める</div>
+              <div class="mrow">
+                <div class="c"><div class="ci">🎲</div><div class="cl">ガチャ</div></div>
+                <div class="c"><div class="ci">🃏</div><div class="cl">スワイプ</div></div>
+                <div class="c"><div class="ci">👥</div><div class="cl">みんなで</div></div>
+              </div>
+            </div>
+            <div class="foot">
+              <div class="ghost" style="margin-bottom:9px">↩ スキップをやり直す</div>
+              <div class="primary">＋ お店を保存する</div>
+            </div>
+          </div></div>
+          <div class="tabbar"><div class="ti on"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

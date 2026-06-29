@@ -16,6 +16,7 @@
 - [specs/scoring.md](specs/scoring.md)
 - [specs/resurfacing.md](specs/resurfacing.md)
 - [specs/csv-import.md](specs/csv-import.md)
+- [../mockups/README.md](../mockups/README.md): 画面モック一覧（HTML）
 
 ### ドメインモデリング
 
