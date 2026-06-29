@@ -1,22 +1,21 @@
-# Architecture Index
+# アーキテクチャインデックス
 
-Architecture documents explain the technical shape of the system.
+アーキテクチャ文書は、システムの技術的な形を説明します。
 
-## Documents
+## 文書
 
 - [overview.md](overview.md): システム構成・レイヤー
 - [tech-stack.md](tech-stack.md): 技術選定
 
-## When To Add Documents
+## 文書を追加するタイミング
 
-Add architecture docs when introducing:
+次の要素を導入するときは、アーキテクチャ文書を追加してください。
 
-- Application framework choices
-- Backend or storage choices
-- Background jobs
-- External integrations
-- Authentication
-- Notification infrastructure
+- アプリケーションフレームワークの選定
+- バックエンドまたはストレージの選定
+- バックグラウンドジョブ
+- 外部連携
+- 認証
+- 通知基盤
 
-Record major decisions in [../adr/INDEX.md](../adr/INDEX.md).
-
+重要な判断は [../adr/INDEX.md](../adr/INDEX.md) に記録してください。

@@ -1,38 +1,38 @@
-# Specs Index
+# 仕様インデックス
 
-Feature specs and UX flows live here.
+機能仕様とUXフローはここに置きます。
 
-## Documents
+## 文書
 
-- [mvp.md](mvp.md): initial release scope（決定事項・アーキテクチャ要約）
-- [user-flows.md](user-flows.md): core user journeys
+- [mvp.md](mvp.md): 初期リリースのスコープ
+- [user-flows.md](user-flows.md): 主要なユーザージャーニー
+- [home-and-decision-ux.md](home-and-decision-ux.md): ホーム画面と決定UXの方針
 - [save-flow.md](save-flow.md): 保存（共有/手動/OGP/重複判定）
 - [decide-flow.md](decide-flow.md): 決定モード（gacha/swipe/roulette）
 - [scoring.md](scoring.md): 「今行くべき」スコア式
 - [resurfacing.md](resurfacing.md): 思い出す（ローカル通知）
 - [csv-import.md](csv-import.md): CSV 一括取り込み（MVP 直後の初期拡張）
 
-## Template For New Specs
+## 新しい仕様のテンプレート
 
-Use this structure for new feature specs:
+新しい機能仕様には次の構成を使ってください。
 
 ```md
-# Feature Name
+# 機能名
 
-## Goal
+## 目的
 
-## Non-Goals
+## 対象外
 
-## User Stories
+## ユーザーストーリー
 
-## UX Flow
+## UXフロー
 
-## Functional Requirements
+## 機能要件
 
-## Data Requirements
+## データ要件
 
-## Edge Cases
+## エッジケース
 
-## Open Questions
+## 未決事項
 ```
-

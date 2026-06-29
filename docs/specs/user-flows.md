@@ -1,34 +1,45 @@
-# User Flows
+# ユーザーフロー
 
-## Core Flow
+## コアフロー
 
 ```text
-Save
-  -> Resurface
-  -> Decide
-  -> Go
-  -> Record
+保存する
+  -> 思い出す
+  -> 決める
+  -> 行く
+  -> 記録する
 ```
 
-## Save Flow
+## 保存フロー
 
-1. User finds a restaurant on an external service.
-2. User shares the URL to this app.
-3. App stores URL, name if available, source type, and saved time.
-4. User may optionally set desire level.
+1. ユーザーが外部サービスで飲食店を見つける。
+2. ユーザーがURLをこのアプリに共有する。
+3. アプリはURL、取得できる場合は店名、ソース種別、保存日時を保存する。
+4. ユーザーは任意で行きたい度を設定できる。
 
-The flow should complete in a few seconds.
+このフローは数秒で完了するべき。
 
-## Decide Flow
+## 思い出すフロー（ホーム・今日の一店）
 
-1. User opens the app with the intent to decide.
-2. User chooses gacha, swipe, or group decision mode.
-3. App presents candidates from saved restaurants.
-4. User narrows or accepts a candidate.
-5. App shows one final restaurant and a way to open it in a map app.
+1. ユーザーがアプリを開く。
+2. ホームに、スコアリングで抽選された「今日の一店」が1件だけ表示される。
+3. 根拠はアプリ内データのみ（行きたい度・経過日数・タグなど）で示し、外部データやAI推論文は使わない。
+4. そのまま決定するか、スキップするか、ガチャ/スワイプ/みんなでで決め直す。
 
-## Post-Visit Flow
+詳細は [home-and-decision-ux.md](home-and-decision-ux.md) を参照。
 
-1. After a likely visit, the app asks for a light rating.
-2. User can add memo, companion, photos, and revisit intent later.
+## 決定フロー
 
+1. ユーザーが決める目的でアプリを開く。
+2. 今日の一店をそのまま採用するか、ガチャ、スワイプ、複数人で決めるモードを選ぶ。
+3. アプリが保存済み店舗から候補を提示する。
+   - ガチャ: 条件を選び、母数から1店を抽選する。
+   - スワイプ: 候補を左右に振り分け、残った候補から手動またはおまかせ（ルーレット/ガチャ）で1店を選ぶ。
+   - みんなで: 1台のスマホを回し、投票制または順位制で決める。
+4. アプリが最終的な1店舗と、地図アプリで開く手段を表示する。「行く」は外部に委ねる。
+
+## 訪問後フロー
+
+1. 後日アプリを開いたとき、未記録の訪問があればホーム上部に記録うながしを表示する（スキップ可）。
+2. ユーザーは星評価だけで記録を完了できる。
+3. ユーザーは後からメモ、同行者、写真、再訪意向を追加できる。

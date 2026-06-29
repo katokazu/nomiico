@@ -1,15 +1,14 @@
-# Database Index
+# データベースインデックス
 
-Database documentation describes persistence models, migrations, and data ownership.
+データベース文書は、永続化モデル、マイグレーション、データ所有権を説明します。
 
-## Documents
+## 文書
 
 - [schema.md](schema.md): SQLite スキーマ（テーブル定義・索引・マイグレーション方針）
 
-## Principles
+## 原則
 
-- Store user intent even when metadata is incomplete.
-- Keep source URLs.
-- Separate restaurants, tags, visits, and decision sessions.
-- Avoid making optional enrichment required for MVP.
-
+- メタデータが不完全でもユーザーの意図を保存する。
+- 元URLを保持する。
+- 店舗、タグ、訪問、決定セッションを分ける。
+- MVPでは任意の情報補完を必須にしない。

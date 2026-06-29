@@ -1,22 +1,21 @@
-# ADR: Title
+# ADR: タイトル
 
-## Status
+## 状況
 
-Proposed
+提案中
 
-## Context
+## 背景
 
-What problem or decision are we facing?
+どのような問題または判断に向き合っているか。
 
-## Decision
+## 決定
 
-What did we decide?
+何を決めたか。
 
-## Consequences
+## 結果
 
-What becomes easier or harder because of this decision?
+この決定によって何が容易になり、何が難しくなるか。
 
-## Alternatives Considered
+## 検討した代替案
 
-What other options were considered?
-
+他にどのような選択肢を検討したか。

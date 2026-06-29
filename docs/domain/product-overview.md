@@ -242,7 +242,7 @@ AI機能は将来的に有効だが、MVPでは「決める体験」の完成度
 
 ## 7. データモデル案
 
-### Restaurant
+### 店舗（Restaurant）
 
 | フィールド | 型 | 説明 |
 |---|---|---|
@@ -263,7 +263,7 @@ AI機能は将来的に有効だが、MVPでは「決める体験」の完成度
 | last_suggested_at | datetime | 最後に提案した日時 |
 | last_visited_at | datetime | 最終訪問日時 |
 
-### Tag
+### タグ（Tag）
 
 | フィールド | 型 | 説明 |
 |---|---|---|
@@ -279,14 +279,14 @@ AI機能は将来的に有効だが、MVPでは「決める体験」の完成度
 - food: 焼鳥 / 焼肉 / 寿司 / ラーメン / イタリアン
 - season: 春 / 夏 / 秋 / 冬
 
-### RestaurantTag
+### 店舗タグ（RestaurantTag）
 
 | フィールド | 型 | 説明 |
 |---|---|---|
 | restaurant_id | UUID | 店ID |
 | tag_id | UUID | タグID |
 
-### Visit
+### 訪問（Visit）
 
 | フィールド | 型 | 説明 |
 |---|---|---|
@@ -298,7 +298,7 @@ AI機能は将来的に有効だが、MVPでは「決める体験」の完成度
 | companion | string | 同行者 |
 | revisit | boolean | また行きたいか |
 
-### DecisionSession
+### 決定セッション（DecisionSession）
 
 | フィールド | 型 | 説明 |
 |---|---|---|
@@ -309,7 +309,7 @@ AI機能は将来的に有効だが、MVPでは「決める体験」の完成度
 | created_at | datetime | 作成日時 |
 | completed_at | datetime | 完了日時 |
 
-### DecisionCandidate
+### 決定候補（DecisionCandidate）
 
 | フィールド | 型 | 説明 |
 |---|---|---|

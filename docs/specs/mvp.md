@@ -1,36 +1,37 @@
-# MVP Spec
+# MVP仕様
 
-## Goal
+## 目的
 
-Make it possible to save restaurants and decide one place to go today from saved candidates.
+飲食店を保存し、保存済み候補の中から今日行く1店舗を決められるようにする。
 
-## In Scope
+## 対象範囲
 
-- Save a restaurant from a shared URL or manual entry
-- Store basic restaurant information
-- Show saved restaurants
-- Mark visited / unvisited
-- Set desire level
-- Filter by basic conditions
-- Decide via gacha mode
-- Narrow candidates via swipe mode
+- 共有URLまたは手動入力から飲食店を保存する
+- 基本的な店舗情報を保存する
+- 保存済み店舗を表示する
+- 訪問済み / 未訪問を管理する
+- 行きたい度を設定する
+- 基本条件でフィルタする
+- ガチャモードで決める
+- スワイプモードで候補を絞る
 
-## Out Of Scope
+## 対象外
 
-- Full Google Maps import（API 直接連携。ただし軽量版の CSV インポートは MVP 直後の初期拡張で実施 → [csv-import](csv-import.md)）
-- Full Instagram import
-- Reservation flow
-- Social feed
-- Advanced AI concierge
-- Complex automatic tagging
-- Large-scale recommendation infrastructure
+- Googleマップの完全インポート
+- Instagramの完全インポート
+- 予約フロー
+- ソーシャルフィード
+- 高度なAIコンシェルジュ
+- 複雑な自動タグ付け
+- 大規模なレコメンド基盤
 
-## Success Criteria
+## 成功基準
 
-- A user can save a candidate quickly.
-- A user can open the app and reach a decision without managing a list first.
-- A user can record at least a minimal post-visit evaluation.
+- ユーザーが候補を素早く保存できる。
+- ユーザーがアプリを開き、先に一覧管理をしなくても決定に到達できる。
+- ユーザーが訪問後に最低限の評価を記録できる。
 
+## 未決事項
 ## Decisions (旧 Open Questions)
 
 - **Which platform first?** → モバイル（Expo / React Native）([ADR 0001](../adr/0001-platform-expo-react-native.md))。
@@ -51,3 +52,6 @@ Make it possible to save restaurants and decide one place to go today from saved
 - [resurfacing.md](resurfacing.md): 思い出す通知
 - [csv-import.md](csv-import.md): CSV 一括取り込み（MVP 直後の初期拡張）
 
+- 最初にどのプラットフォームで実装するか。
+- 初期バージョンでどの種類のURLをサポートするか。
+- MVPに必要なメタデータ抽出はどの程度か。

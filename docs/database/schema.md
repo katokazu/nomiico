@@ -1,4 +1,4 @@
-# Database Schema
+# データベーススキーマ案
 
 対象: 端末ローカル SQLite（[ADR 0002](../adr/0002-local-first-with-sync-seam.md)）。ORM は Drizzle。将来の Postgres / Supabase 移行を見据え、型・命名は両対応で素直なものにする。
 
@@ -16,8 +16,9 @@
 - 外部キーは `<entity>_id`。
 - ソフトデリートは使わず、`archived`（店舗）/ セッション `status` で状態を表現する。
 
-## Tables
+## テーブル
 
+初期候補となるテーブル:
 ### app_user
 
 ローカル匿名ユーザー（通常 1 行）。
@@ -154,6 +155,19 @@ CSV 一括取り込みの単位（[csv-import](../specs/csv-import.md)）。Undo
 | rank | INTEGER | NULL可 | 順位 |
 | swipe_result | TEXT | NULL可 | enum: `kept`/`rejected`/`pending`（swipe モード用） |
 
+## 店舗データ
+
+[../domain-models/restaurant.md](../domain-models/restaurant.md) を参照してください。
+
+## 決定データ
+
+[../domain-models/decision-session.md](../domain-models/decision-session.md) を参照してください。
+
+## 未決事項
+
+- ソースメタデータは構造化カラム、raw JSON、またはその両方のどれで保存するか。
+- タグはユーザー定義、システム定義、または混在のどれにするか。
+- アーカイブ済み候補を決定セッションでどう扱うか。
 インデックス `idx_candidates_session` (session_id)。
 
 ## 削除規則

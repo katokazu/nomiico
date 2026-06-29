@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ホーム画面 デザイン案</title>
+<style>
+  :root {
+    --gap: 28px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+    background: #eceef1;
+    color: #1a1d21;
+    padding: 40px 24px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page-head {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+  }
+  .page-head h1 { font-size: 26px; letter-spacing: .02em; }
+  .page-head p { margin-top: 10px; color: #5b626b; font-size: 14px; line-height: 1.8; max-width: 760px; }
+  .page-head .principle {
+    margin-top: 16px; display: inline-block; padding: 8px 16px; border-radius: 999px;
+    background: #1a1d21; color: #fff; font-size: 13px; font-weight: 600;
+  }
+
+  .grid {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; gap: 56px 48px;
+    justify-content: center;
+  }
+  .case { width: 390px; }
+  .case-label { margin-bottom: 6px; font-size: 15px; font-weight: 700; }
+  .case-tag { font-size: 12px; color: #fff; background: #6b7280; padding: 3px 9px; border-radius: 6px; margin-left: 8px; font-weight: 600; vertical-align: middle;}
+  .case-desc { font-size: 12.5px; color: #5b626b; line-height: 1.75; margin: 8px 0 18px; min-height: 66px; }
+
+  /* phone frame */
+  .phone {
+    width: 390px; height: 800px; border-radius: 44px;
+    background: #000; padding: 12px;
+    box-shadow: 0 24px 60px -20px rgba(0,0,0,.45), 0 4px 12px rgba(0,0,0,.2);
+    position: relative;
+  }
+  .screen {
+    width: 100%; height: 100%; border-radius: 33px; overflow: hidden;
+    position: relative; display: flex; flex-direction: column;
+  }
+  .notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 130px; height: 26px; background: #000; border-radius: 0 0 18px 18px; z-index: 50;
+  }
+  .statusbar {
+    height: 44px; flex: 0 0 44px; display: flex; align-items: center;
+    justify-content: space-between; padding: 0 26px; font-size: 13px; font-weight: 600;
+  }
+  .tabbar {
+    flex: 0 0 64px; display: flex; align-items: center; justify-content: space-around;
+    font-size: 10px; padding-bottom: 10px;
+  }
+  .tabbar .ti { display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: .55; }
+  .tabbar .ti.on { opacity: 1; }
+  .tabbar .ti .ic { font-size: 19px; }
+  .content { flex: 1; overflow: hidden; position: relative; }
+
+  /* ============ A : 決め打ちボールド ============ */
+  .a { background: #0e0f13; color: #fff; }
+  .a .statusbar { color: #fff; }
+  .a .content { padding: 18px 24px 0; display: flex; flex-direction: column; }
+  .a .greet { font-size: 13px; color: #8b93a1; }
+  .a .q { font-size: 38px; font-weight: 800; line-height: 1.15; margin-top: 6px; letter-spacing: -.01em;}
+  .a .q em { font-style: normal; color: #ffd24a; }
+  .a .gacha {
+    margin-top: 32px; aspect-ratio: 1/1; border-radius: 32px;
+    background: radial-gradient(120% 120% at 30% 20%, #ff7a59, #ff3d77 55%, #b81d63);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #fff; box-shadow: 0 20px 50px -16px rgba(255,61,119,.6); position: relative;
+  }
+  .a .gacha .big { font-size: 64px; }
+  .a .gacha .gt { font-size: 22px; font-weight: 800; margin-top: 8px; }
+  .a .gacha .gs { font-size: 12px; opacity: .85; margin-top: 4px; }
+  .a .gacha .pulse { position:absolute; inset:0; border-radius:32px; border:2px solid rgba(255,255,255,.35); }
+  .a .modes { margin-top: 22px; display: flex; gap: 10px; }
+  .a .modes .m {
+    flex: 1; padding: 14px 6px; border-radius: 16px; background: #1b1d24;
+    text-align: center; font-size: 12px; font-weight: 600; color: #cfd4dd;
+  }
+  .a .modes .m .mi { display: block; font-size: 20px; margin-bottom: 6px; }
+  .a .foot { margin-top: auto; padding: 16px 0 14px; text-align: center; font-size: 12px; color: #6b7280;}
+  .a .foot b { color: #ffd24a; }
+
+  /* ============ B : エディトリアル「今日のおすすめ」 ============ */
+  .b { background: #faf7f2; color: #2a2622; }
+  .b .content { overflow-y: auto; }
+  .b .bhead { padding: 14px 24px 10px; }
+  .b .bhead .d { font-size: 12px; color: #a08d76; letter-spacing: .14em; font-weight: 700; }
+  .b .bhead .t { font-size: 22px; font-weight: 800; margin-top: 2px; }
+  .b .hero {
+    margin: 6px 18px 0; border-radius: 22px; overflow: hidden; background: #fff;
+    box-shadow: 0 16px 40px -22px rgba(80,60,30,.5);
+  }
+  .b .hero .img {
+    height: 200px; background: linear-gradient(135deg,#c9a36b,#7c5a3a);
+    position: relative; display:flex; align-items:flex-end; padding:16px; color:#fff;
+  }
+  .b .hero .img .badge { position:absolute; top:14px; left:14px; background:rgba(0,0,0,.5); padding:5px 11px; border-radius:999px; font-size:11px; font-weight:700; }
+  .b .hero .img .nm { font-size: 24px; font-weight: 800; text-shadow:0 2px 8px rgba(0,0,0,.4); }
+  .b .hero .body { padding: 16px 18px 18px; }
+  .b .hero .why { font-size: 12px; color: #8a7a66; font-weight: 700; margin-bottom: 8px; }
+  .b .hero ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .b .hero li { font-size: 13.5px; display: flex; gap: 8px; align-items:center; }
+  .b .hero li .e { width: 18px; text-align:center; }
+  .b .hero .cta {
+    margin-top: 16px; display: flex; gap: 10px;
+  }
+  .b .hero .cta .go { flex:1; background:#2a2622; color:#fff; text-align:center; padding:13px; border-radius:14px; font-weight:700; font-size:14px;}
+  .b .hero .cta .skip { width:52px; display:flex; align-items:center; justify-content:center; background:#f0eae1; border-radius:14px; font-size:18px;}
+  .b .other { padding: 22px 24px 14px; }
+  .b .other .ot { font-size: 13px; font-weight: 700; color:#8a7a66; margin-bottom: 12px; }
+  .b .other .row { display: flex; gap: 10px; }
+  .b .other .row .c { flex:1; background:#fff; border-radius:14px; padding:12px; text-align:center; box-shadow:0 8px 20px -16px rgba(80,60,30,.6);}
+  .b .other .row .c .ci { font-size:22px; }
+  .b .other .row .c .cl { font-size:12px; font-weight:700; margin-top:6px;}
+  .b .other .row .c .cs { font-size:10px; color:#a08d76; margin-top:2px;}
+
+  /* ============ C : プレイフル・ガチャ ============ */
+  .c { background: linear-gradient(180deg,#fff0f6 0%, #eef4ff 100%); color:#3a2b4a; }
+  .c .content { padding: 8px 22px 0; display:flex; flex-direction:column; align-items:center; }
+  .c .q { font-size: 26px; font-weight: 800; text-align:center; margin-top: 8px; }
+  .c .q span { color:#ff5fa2; }
+  .c .machine {
+    margin-top: 18px; width: 230px; height: 290px; border-radius: 28px;
+    background: linear-gradient(180deg,#ffd6e8,#ffeef5);
+    border: 6px solid #fff; box-shadow: 0 20px 44px -18px rgba(255,95,162,.55);
+    position: relative; display:flex; flex-direction:column; align-items:center;
+  }
+  .c .machine .dome {
+    width: 180px; height: 150px; margin-top: 16px; border-radius: 90px 90px 24px 24px;
+    background: radial-gradient(120% 90% at 35% 25%, rgba(255,255,255,.9), rgba(255,255,255,.15));
+    border: 3px solid rgba(255,255,255,.8); position: relative; overflow:hidden;
+  }
+  .c .machine .dome .cap { position:absolute; width:34px; height:34px; border-radius:50%; }
+  .c .machine .cap1{ background:#ff8fb3; top:24px; left:30px;}
+  .c .machine .cap2{ background:#8fd0ff; top:60px; left:78px;}
+  .c .machine .cap3{ background:#ffd36b; top:90px; left:34px;}
+  .c .machine .cap4{ background:#b69bff; top:40px; left:110px;}
+  .c .machine .cap5{ background:#8fe6b0; top:96px; left:96px;}
+  .c .machine .slot { margin-top: 18px; width:74px; height:18px; border-radius:10px; background:#caa9d6;}
+  .c .machine .knob { margin-top: 14px; width:40px; height:40px; border-radius:50%; background:#fff; box-shadow:inset 0 -3px 0 rgba(0,0,0,.08), 0 4px 8px rgba(0,0,0,.1);}
+  .c .spin {
+    margin-top: 26px; padding: 16px 0; width: 100%; border-radius: 20px; text-align:center;
+    background: linear-gradient(90deg,#ff6fb0,#ff8f6f); color:#fff; font-weight:800; font-size:18px;
+    box-shadow:0 14px 30px -12px rgba(255,111,176,.7);
+  }
+  .c .spin small { display:block; font-weight:600; font-size:11px; opacity:.9; margin-top:3px;}
+  .c .alt { margin-top: 16px; display:flex; gap:18px; }
+  .c .alt a { font-size:12.5px; font-weight:700; color:#9a6fb0; text-decoration:none; border-bottom:2px dotted #d9b8e6;}
+
+  /* ============ D : ミニマル・モノクロ ============ */
+  .d { background:#ffffff; color:#111; }
+  .d .content { padding: 40px 34px 0; display:flex; flex-direction:column; }
+  .d .kicker { font-size:11px; letter-spacing:.28em; color:#999; font-weight:700; }
+  .d .q { font-size:34px; font-weight:300; line-height:1.3; margin-top:20px; letter-spacing:-.01em;}
+  .d .q b { font-weight:700; }
+  .d .acts { margin-top: 48px; display:flex; flex-direction:column; }
+  .d .acts a {
+    display:flex; align-items:baseline; justify-content:space-between;
+    padding: 20px 0; border-top:1px solid #ededed; text-decoration:none; color:#111;
+  }
+  .d .acts a:last-child { border-bottom:1px solid #ededed; }
+  .d .acts a .l { font-size:19px; font-weight:600; }
+  .d .acts a .n { font-size:12px; color:#bbb; }
+  .d .acts a .ar { font-size:15px; color:#111; }
+  .d .resurf {
+    margin-top: auto; margin-bottom: 26px; padding: 18px; border:1px solid #ededed; border-radius:14px;
+  }
+  .d .resurf .rl { font-size:11px; color:#999; letter-spacing:.1em; font-weight:700; }
+  .d .resurf .rt { font-size:14px; margin-top:8px; line-height:1.6; }
+  .d .resurf .rt b { font-weight:700; }
+  .d .resurf .rb { margin-top:12px; display:flex; gap:10px; }
+  .d .resurf .rb span { font-size:12px; font-weight:700; padding:7px 14px; border-radius:999px; border:1px solid #111;}
+  .d .resurf .rb span.ghost { border-color:#ddd; color:#999;}
+
+  /* ============ E : 再浮上スタック ============ */
+  .e { background:#101826; color:#eaf0f7; }
+  .e .statusbar { color:#eaf0f7; }
+  .e .content { padding: 12px 22px 0; display:flex; flex-direction:column; }
+  .e .eh { display:flex; justify-content:space-between; align-items:center; }
+  .e .eh .q { font-size:19px; font-weight:800; }
+  .e .eh .q small { display:block; font-size:11px; font-weight:600; color:#7e8aa0; margin-top:2px;}
+  .e .eh .cnt { font-size:11px; color:#7e8aa0; background:#1c2740; padding:6px 11px; border-radius:999px; font-weight:700;}
+  .e .stack { position: relative; margin-top: 20px; height: 380px; }
+  .e .card {
+    position:absolute; left:0; right:0; border-radius:22px; overflow:hidden;
+    background:#1c2740; box-shadow:0 18px 40px -18px rgba(0,0,0,.7);
+  }
+  .e .card.c1 { top:0; height:360px; background:#1c2740; z-index:3; }
+  .e .card.c2 { top:-14px; left:14px; right:14px; height:360px; background:#16203a; z-index:2; transform:scale(.97);}
+  .e .card.c3 { top:-26px; left:26px; right:26px; height:360px; background:#121a30; z-index:1; transform:scale(.94);}
+  .e .card.c1 .img { height:200px; background:linear-gradient(135deg,#2f6df0,#7b3df0); display:flex; align-items:flex-end; padding:16px;}
+  .e .card.c1 .img .since { background:rgba(0,0,0,.45); padding:5px 11px; border-radius:999px; font-size:11px; font-weight:700;}
+  .e .card.c1 .b { padding:16px 18px; }
+  .e .card.c1 .nm { font-size:21px; font-weight:800; }
+  .e .card.c1 .meta { font-size:12px; color:#9fb0cc; margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;}
+  .e .card.c1 .meta span { background:#26345a; padding:4px 9px; border-radius:7px;}
+  .e .card.c1 .ask { font-size:13px; color:#c7d4ea; margin-top:14px; font-weight:700;}
+  .e .swipe { margin-top: 18px; display:flex; gap:14px; align-items:center; justify-content:center;}
+  .e .swipe .x, .e .swipe .o { width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px;}
+  .e .swipe .x { background:#26243a; color:#ff6b81; border:2px solid #3a3550;}
+  .e .swipe .o { background:#1f3a2e; color:#46e08a; border:2px solid #2f5a45;}
+  .e .swipe .o.big { width:70px; height:70px; font-size:30px;}
+  .e .hintbar { margin-top:16px; text-align:center; font-size:11px; color:#7e8aa0;}
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>ホーム画面 デザイン案</h1>
+    <p>
+      プロダクトの北極星は「保存一覧アプリではなく、今日どこに行くかを最速で決めるアプリ」。
+      そのため、どの案も <b>マップ・検索・長い一覧をホームの主役にせず</b>、開いた瞬間に「決める」体験へ入れることを最優先にしています。
+      振り切り方の異なる5案を用意しました。実機サイズ（iPhone相当）で表示しています。
+    </p>
+    <span class="principle">店を集めることに最適化しない。決めて行くことに最適化する。</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- A -->
+    <div class="case">
+      <div class="case-label">A. 決め打ちボールド<span class="case-tag">迷わせない</span></div>
+      <div class="case-desc">「今日どこ行く？」の問いと巨大なガチャボタンだけを置き、開いた瞬間にワンタップで決められる。他モードは脇役。最も尖った「決める専用機」案。</div>
+      <div class="phone"><div class="notch"></div><div class="screen a">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="greet">こんばんは、金曜の夜</div>
+          <div class="q">今日<em>どこ</em><br>行く？</div>
+          <div class="gacha">
+            <div class="pulse"></div>
+            <div class="big">🎲</div>
+            <div class="gt">ガチャで決める</div>
+            <div class="gs">保存済み 38 店からおまかせ</div>
+          </div>
+          <div class="modes">
+            <div class="m"><span class="mi">🃏</span>スワイプ</div>
+            <div class="m"><span class="mi">👥</span>みんなで</div>
+            <div class="m"><span class="mi">🔖</span>保存一覧</div>
+          </div>
+          <div class="foot"><b>143日前</b>に保存した焼鳥、まだ行きたい？</div>
+        </div>
+        <div class="tabbar a">
+          <div class="ti on"><span class="ic">🎲</span>決める</div>
+          <div class="ti"><span class="ic">🔖</span>保存</div>
+          <div class="ti"><span class="ic">🗺</span>記録</div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- B -->
+    <div class="case">
+      <div class="case-label">B. エディトリアル「今日のおすすめ」<span class="case-tag">納得して決める</span></div>
+      <div class="case-desc">「今行くべき理由」を主役にした雑誌風の1枚提案。なぜ今かを箇条書きで示し、納得して即訪問へ。温かみのある世界観で、開くたび1店を提案する。</div>
+      <div class="phone"><div class="notch"></div><div class="screen b">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="bhead"><div class="d">FRI · 6月29日</div><div class="t">今日のおすすめ</div></div>
+          <div class="hero">
+            <div class="img"><div class="badge">★★★★★ 行きたい度</div><div class="nm">炭火 とり源</div></div>
+            <div class="body">
+              <div class="why">なぜ今ここ？</div>
+              <ul>
+                <li><span class="e">🚶</span>今いる場所から徒歩8分</li>
+                <li><span class="e">⏳</span>保存してから143日経っています</li>
+                <li><span class="e">🍶</span>「友達 / 飲み会」タグ付き</li>
+                <li><span class="e">🌧</span>今日は雨。駅近で濡れにくい</li>
+              </ul>
+              <div class="cta"><div class="go">ここにする →</div><div class="skip">🔄</div></div>
+            </div>
+          </div>
+          <div class="other">
+            <div class="ot">気分で選ぶ</div>
+            <div class="row">
+              <div class="c"><div class="ci">🎲</div><div class="cl">ガチャ</div><div class="cs">おまかせ1店</div></div>
+              <div class="c"><div class="ci">🃏</div><div class="cl">スワイプ</div><div class="cs">絞り込む</div></div>
+              <div class="c"><div class="ci">👥</div><div class="cl">みんなで</div><div class="cs">投票・ドラフト</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="tabbar"><div class="ti on"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+      </div></div>
+    </div>
+
+    <!-- C -->
+    <div class="case">
+      <div class="case-label">C. プレイフル・ガチャ<span class="case-tag">決めるのが楽しい</span></div>
+      <div class="case-desc">「決める体験を楽しくする」に全振り。ガチャガチャの実物メタファーで、回す行為そのものをワクワクさせる。ポップでカジュアル、若年層向けの世界観。</div>
+      <div class="phone"><div class="notch"></div><div class="screen c">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="q">今日のお店、<br><span>ガチャ</span>で決めよ</div>
+          <div class="machine">
+            <div class="dome">
+              <div class="cap cap1"></div><div class="cap cap2"></div><div class="cap cap3"></div>
+              <div class="cap cap4"></div><div class="cap cap5"></div>
+            </div>
+            <div class="slot"></div>
+            <div class="knob"></div>
+          </div>
+          <div class="spin">回す 🎉<small>保存した38店からランダムで1店</small></div>
+          <div class="alt">
+            <a href="#">条件をつける</a>
+            <a href="#">みんなで回す</a>
+          </div>
+        </div>
+        <div class="tabbar"><div class="ti on"><span class="ic">🎰</span>ガチャ</div><div class="ti"><span class="ic">🔖</span>コレクション</div><div class="ti"><span class="ic">⭐</span>履歴</div></div>
+      </div></div>
+    </div>
+
+    <!-- D -->
+    <div class="case">
+      <div class="case-label">D. ミニマル・モノクロ<span class="case-tag">静かで速い</span></div>
+      <div class="case-desc">情報を極限まで削ぎ、問いと3つの行動だけ。装飾ゼロで「アプリを開く＝決める」を体現。下部に再浮上を1件だけそっと添える。落ち着いた大人向け。</div>
+      <div class="phone"><div class="notch"></div><div class="screen d">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="kicker">NOMIICO</div>
+          <div class="q">今日は、<br><b>どう決める？</b></div>
+          <div class="acts">
+            <a href="#"><span class="l">おまかせで1店</span><span class="ar">→</span></a>
+            <a href="#"><span class="l">スワイプで絞る</span><span class="ar">→</span></a>
+            <a href="#"><span class="l">みんなで決める</span><span class="ar">→</span></a>
+          </div>
+          <div class="resurf">
+            <div class="rl">そういえば</div>
+            <div class="rt"><b>大衆酒場 ことぶき</b><br>143日前に保存。まだ行きたい？</div>
+            <div class="rb"><span>行きたい</span><span class="ghost">アーカイブ</span></div>
+          </div>
+        </div>
+        <div class="tabbar"><div class="ti on"><span class="ic">●</span>決める</div><div class="ti"><span class="ic">○</span>保存</div><div class="ti"><span class="ic">○</span>記録</div></div>
+      </div></div>
+    </div>
+
+    <!-- E -->
+    <div class="case">
+      <div class="case-label">E. 再浮上スタック<span class="case-tag">埋もれを掘り起こす</span></div>
+      <div class="case-desc">「思い出す仕組みを中心に置く」案。ホームを開くと保存候補のカードが積まれ、まだ行きたい？をスワイプで仕分け。埋もれた候補の消化に最適化。</div>
+      <div class="phone"><div class="notch"></div><div class="screen e">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="eh">
+            <div class="q">まだ行きたい？<small>古い保存から再確認</small></div>
+            <div class="cnt">残り 12</div>
+          </div>
+          <div class="stack">
+            <div class="card c3"></div>
+            <div class="card c2"></div>
+            <div class="card c1">
+              <div class="img"><div class="since">⏳ 143日前に保存</div></div>
+              <div class="b">
+                <div class="nm">大衆酒場 ことぶき</div>
+                <div class="meta"><span>焼鳥</span><span>渋谷 徒歩6分</span><span>¥3,000</span></div>
+                <div class="ask">右にスワイプで「行きたい候補」へ →</div>
+              </div>
+            </div>
+          </div>
+          <div class="swipe">
+            <div class="x">✕</div>
+            <div class="o big">♥</div>
+            <div class="x">↻</div>
+          </div>
+          <div class="hintbar">仕分けた候補は、最後にガチャ／ルーレットで1店に決められます</div>
+        </div>
+        <div class="tabbar"><div class="ti on"><span class="ic">🔥</span>再浮上</div><div class="ti"><span class="ic">🎲</span>決める</div><div class="ti"><span class="ic">🔖</span>保存</div></div>
+      </div></div>
+    </div>
+
+  </div>
+</body>
+</html>
