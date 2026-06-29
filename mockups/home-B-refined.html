@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ホーム B案リファイン「今日の一店 + 決めるモード」</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+    background: #eceef1; color: #1a1d21; padding: 40px 24px 80px; -webkit-font-smoothing: antialiased;
+  }
+  .page-head { max-width: 1000px; margin: 0 auto 40px; }
+  .page-head h1 { font-size: 26px; }
+  .page-head p { margin-top: 10px; color: #5b626b; font-size: 14px; line-height: 1.85; max-width: 800px; }
+  .grid { max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 56px 48px; justify-content: center; }
+  .case { width: 390px; }
+  .case-label { margin-bottom: 6px; font-size: 15px; font-weight: 700; }
+  .case-tag { font-size: 12px; color:#fff; background:#6b7280; padding:3px 9px; border-radius:6px; margin-left:8px; font-weight:600; vertical-align:middle; }
+  .case-desc { font-size: 12.5px; color:#5b626b; line-height:1.75; margin: 8px 0 18px; min-height: 44px; }
+
+  .phone { width: 390px; height: 800px; border-radius: 44px; background:#000; padding:12px;
+    box-shadow:0 24px 60px -20px rgba(0,0,0,.45), 0 4px 12px rgba(0,0,0,.2); position:relative; }
+  .screen { width:100%; height:100%; border-radius:33px; overflow:hidden; position:relative; display:flex; flex-direction:column;
+    background:#faf7f2; color:#2a2622; }
+  .notch { position:absolute; top:0; left:50%; transform:translateX(-50%); width:130px; height:26px; background:#000; border-radius:0 0 18px 18px; z-index:50; }
+  .statusbar { height:44px; flex:0 0 44px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; font-size:13px; font-weight:600; }
+  .content { flex:1; overflow:hidden; position:relative; display:flex; flex-direction:column; }
+  .tabbar { flex:0 0 60px; display:flex; align-items:center; justify-content:space-around; font-size:10px; padding-bottom:8px; }
+  .tabbar .ti { display:flex; flex-direction:column; align-items:center; gap:4px; opacity:.5; }
+  .tabbar .ti.on { opacity:1; color:#b5482f; }
+  .tabbar .ti .ic { font-size:18px; }
+
+  /* header */
+  .head { padding: 12px 24px 6px; display:flex; justify-content:space-between; align-items:baseline; flex:0 0 auto; }
+  .head .l .d { font-size:11px; color:#a08d76; letter-spacing:.16em; font-weight:800; }
+  .head .l .t { font-size:21px; font-weight:800; margin-top:2px; }
+  .head .pool { font-size:11px; color:#a08d76; background:#f0eae1; padding:5px 10px; border-radius:999px; font-weight:700; }
+
+  /* hero card */
+  .hero { margin: 4px 18px 0; border-radius:20px; overflow:hidden; background:#fff; flex:0 0 auto;
+    box-shadow:0 16px 40px -22px rgba(80,60,30,.5); }
+  .hero .img { height:150px; background:linear-gradient(135deg,#c9a36b,#7c5a3a); position:relative; display:flex; align-items:flex-end; padding:14px; color:#fff; }
+  .hero .img:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.55)); }
+  .hero .img .badge { position:absolute; top:14px; left:14px; z-index:2; background:rgba(0,0,0,.5); padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; }
+  .hero .img .badge .stars { color:#ffce4a; }
+  .hero .img .nm { position:relative; z-index:2; font-size:25px; font-weight:800; text-shadow:0 2px 10px rgba(0,0,0,.5); line-height:1.15; }
+
+  .hero .body { padding: 13px 18px 16px; }
+  /* data grid (in-app fields only) */
+  .data { display:flex; flex-direction:column; gap:8px; }
+  .data .row { display:flex; justify-content:space-between; align-items:baseline; font-size:13px; }
+  .data .row .k { color:#a08d76; }
+  .data .row .v { font-weight:700; }
+  .data .row .v .num { font-size:16px; }
+  .tags { margin-top:12px; display:flex; gap:7px; flex-wrap:wrap; }
+  .tags span { font-size:11px; background:#f0eae1; color:#8a7a66; padding:5px 11px; border-radius:999px; font-weight:700; }
+
+  .cta { margin-top:14px; display:flex; gap:10px; }
+  .cta .go { flex:1; background:#b5482f; color:#fff; text-align:center; padding:13px; border-radius:14px; font-weight:800; font-size:14.5px; }
+  .cta .skip { width:54px; display:flex; align-items:center; justify-content:center; background:#f0eae1; color:#8a7a66; border-radius:14px; font-size:12px; font-weight:700; }
+
+  /* modes */
+  .modes { padding: 16px 24px 14px; margin-top:auto; }
+  .modes .mt { font-size:13px; font-weight:800; color:#8a7a66; margin-bottom:10px; }
+  .modes .row { display:flex; gap:10px; }
+  .modes .c { flex:1; background:#fff; border-radius:16px; padding:14px 8px; text-align:center; box-shadow:0 8px 20px -16px rgba(80,60,30,.6); }
+  .modes .c .ci { font-size:24px; }
+  .modes .c .cl { font-size:12.5px; font-weight:800; margin-top:7px; }
+  .modes .c .cs { font-size:10px; color:#a08d76; margin-top:3px; }
+
+  /* no-photo variant header */
+  .hero.np .img { height:auto; padding:22px 18px 16px; background:linear-gradient(135deg,#5e4a3a,#3a2c22); align-items:stretch; flex-direction:column; gap:10px; }
+  .hero.np .img:after { display:none; }
+  .hero.np .img .badge { position:static; align-self:flex-start; background:rgba(255,255,255,.16); }
+  .hero.np .img .gnr { position:relative; z-index:2; font-size:12px; color:rgba(255,255,255,.8); }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>ホーム B案リファイン ── 今日の一店 ＋ 決めるモード</h1>
+    <p>
+      B案のヒーローカード構成はそのまま。ただし内容を「おすすめ（推論文）」から<b>スコアリングで抽選された“今日の一店”</b>に置き換え、
+      表示は<b>アプリ内にあるデータのみ</b>（行きたい度・保存からの経過日数・前回スキップ・ジャンル・エリア・価格帯・タグ）。
+      カードの下に<b>ガチャ／スワイプ／みんなで</b>を常設し、今日の一店が刺さらない日は別モードへ逃がせます。
+      右は<b>写真が取得できない店のフォールバック</b>（同じレイアウトで成立するか確認用）。
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <!-- main -->
+    <div class="case">
+      <div class="case-label">本命：今日の一店（写真あり）<span class="case-tag">B案ベース</span></div>
+      <div class="case-desc">抽選された1店をヒーローで見せ、理由づけ文は出さずデータを淡々と並べる。下段に3つの決めるモードを常設。</div>
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="head">
+            <div class="l"><div class="d">FRI · 6月29日</div><div class="t">今日の一店</div></div>
+            <div class="pool">38店から抽選</div>
+          </div>
+          <div class="hero">
+            <div class="img">
+              <div class="badge">行きたい度 <span class="stars">★★★★★</span></div>
+              <div class="nm">大衆酒場 ことぶき</div>
+            </div>
+            <div class="body">
+              <div class="data">
+                <div class="row"><span class="k">ジャンル</span><span class="v">焼鳥</span></div>
+                <div class="row"><span class="k">エリア</span><span class="v">渋谷 / 徒歩6分</span></div>
+                <div class="row"><span class="k">予算</span><span class="v">¥3,000</span></div>
+                <div class="row"><span class="k">保存してから</span><span class="v"><span class="num">143</span> 日</span></div>
+                <div class="row"><span class="k">前回スキップ</span><span class="v">30日前</span></div>
+              </div>
+              <div class="tags"><span>友達</span><span>飲み会</span><span>駅近</span></div>
+              <div class="cta"><div class="go">今日はここにする →</div><div class="skip">スキップ</div></div>
+            </div>
+          </div>
+          <div class="modes">
+            <div class="mt">気分で選ぶ</div>
+            <div class="row">
+              <div class="c"><div class="ci">🎲</div><div class="cl">ガチャ</div><div class="cs">おまかせ1店</div></div>
+              <div class="c"><div class="ci">🃏</div><div class="cl">スワイプ</div><div class="cs">絞り込む</div></div>
+              <div class="c"><div class="ci">👥</div><div class="cl">みんなで</div><div class="cs">投票・ドラフト</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="tabbar"><div class="ti on"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+      </div></div>
+    </div>
+
+    <!-- no photo fallback -->
+    <div class="case">
+      <div class="case-label">フォールバック：写真なし<span class="case-tag">MVP現実解</span></div>
+      <div class="case-desc">OGP画像が取れない店でもレイアウトが崩れないよう、写真部分を店名＋ジャンルのカラーヘッダーに置換。同一構造で成立する。</div>
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="head">
+            <div class="l"><div class="d">FRI · 6月29日</div><div class="t">今日の一店</div></div>
+            <div class="pool">38店から抽選</div>
+          </div>
+          <div class="hero np">
+            <div class="img">
+              <div class="badge">行きたい度 <span class="stars">★★★★★</span></div>
+              <div class="nm">手打ち蕎麦 やまぶき</div>
+              <div class="gnr">蕎麦 ・ 神保町</div>
+            </div>
+            <div class="body">
+              <div class="data">
+                <div class="row"><span class="k">ジャンル</span><span class="v">蕎麦</span></div>
+                <div class="row"><span class="k">エリア</span><span class="v">神保町 / 徒歩3分</span></div>
+                <div class="row"><span class="k">予算</span><span class="v">¥1,500</span></div>
+                <div class="row"><span class="k">保存してから</span><span class="v"><span class="num">211</span> 日</span></div>
+                <div class="row"><span class="k">前回スキップ</span><span class="v">まだなし</span></div>
+              </div>
+              <div class="tags"><span>一人</span><span>昼</span><span>静か</span></div>
+              <div class="cta"><div class="go">今日はここにする →</div><div class="skip">スキップ</div></div>
+            </div>
+          </div>
+          <div class="modes">
+            <div class="mt">気分で選ぶ</div>
+            <div class="row">
+              <div class="c"><div class="ci">🎲</div><div class="cl">ガチャ</div><div class="cs">おまかせ1店</div></div>
+              <div class="c"><div class="ci">🃏</div><div class="cl">スワイプ</div><div class="cs">絞り込む</div></div>
+              <div class="c"><div class="ci">👥</div><div class="cl">みんなで</div><div class="cs">投票・ドラフト</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="tabbar"><div class="ti on"><span class="ic">🏠</span>ホーム</div><div class="ti"><span class="ic">🔖</span>保存</div><div class="ti"><span class="ic">⭐</span>記録</div></div>
+      </div></div>
+    </div>
+
+  </div>
+</body>
+</html>

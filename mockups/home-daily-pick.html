@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ホーム「今日の一店」デザイン案</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+    background: #eceef1; color: #1a1d21; padding: 40px 24px 80px; -webkit-font-smoothing: antialiased;
+  }
+  .page-head { max-width: 1100px; margin: 0 auto 40px; }
+  .page-head h1 { font-size: 26px; }
+  .page-head p { margin-top: 10px; color: #5b626b; font-size: 14px; line-height: 1.85; max-width: 800px; }
+  .page-head .note { margin-top: 14px; font-size: 13px; color:#374151; background:#fff; border-left:4px solid #1a1d21; padding:12px 16px; border-radius:8px; max-width:800px; line-height:1.8;}
+  .grid { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 56px 48px; justify-content: center; }
+  .case { width: 390px; }
+  .case-label { margin-bottom: 6px; font-size: 15px; font-weight: 700; }
+  .case-tag { font-size: 12px; color:#fff; background:#6b7280; padding:3px 9px; border-radius:6px; margin-left:8px; font-weight:600; vertical-align:middle; }
+  .case-desc { font-size: 12.5px; color:#5b626b; line-height:1.75; margin: 8px 0 18px; min-height: 60px; }
+
+  .phone { width: 390px; height: 800px; border-radius: 44px; background:#000; padding:12px;
+    box-shadow:0 24px 60px -20px rgba(0,0,0,.45), 0 4px 12px rgba(0,0,0,.2); position:relative; }
+  .screen { width:100%; height:100%; border-radius:33px; overflow:hidden; position:relative; display:flex; flex-direction:column; }
+  .notch { position:absolute; top:0; left:50%; transform:translateX(-50%); width:130px; height:26px; background:#000; border-radius:0 0 18px 18px; z-index:50; }
+  .statusbar { height:44px; flex:0 0 44px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; font-size:13px; font-weight:600; }
+  .tabbar { flex:0 0 60px; display:flex; align-items:center; justify-content:space-around; font-size:10px; padding-bottom:8px; }
+  .tabbar .ti { display:flex; flex-direction:column; align-items:center; gap:4px; opacity:.55; }
+  .tabbar .ti.on { opacity:1; }
+  .tabbar .ti .ic { font-size:18px; }
+  .content { flex:1; overflow:hidden; position:relative; }
+
+  /* shared stars */
+  .stars { letter-spacing:1px; }
+
+  /* =================== V1 : 日めくり／おみくじ =================== */
+  .v1 { background:#f4efe6; color:#2b2622; }
+  .v1 .content { padding: 16px 22px 0; display:flex; flex-direction:column; }
+  .v1 .top { display:flex; justify-content:space-between; align-items:baseline; }
+  .v1 .top .label { font-size:12px; letter-spacing:.22em; color:#a8946f; font-weight:800; }
+  .v1 .top .pool { font-size:11px; color:#b3a387; }
+  .v1 .date { margin-top:10px; display:flex; align-items:baseline; gap:10px; }
+  .v1 .date .day { font-size:62px; font-weight:800; line-height:.9; font-feature-settings:"tnum"; }
+  .v1 .date .ym { font-size:13px; color:#9a8868; line-height:1.5; }
+  .v1 .card { margin-top:18px; background:#fffdf8; border:1px solid #e6dcc8; border-radius:18px; padding:22px 20px;
+    box-shadow:0 12px 30px -18px rgba(120,90,40,.5); position:relative; }
+  .v1 .card:before { content:"今日の一店"; position:absolute; top:-11px; left:20px; background:#b5482f; color:#fff;
+    font-size:11px; font-weight:800; letter-spacing:.1em; padding:4px 12px; border-radius:999px; }
+  .v1 .nm { font-size:27px; font-weight:800; margin-top:6px; }
+  .v1 .gnr { font-size:13px; color:#9a8868; margin-top:6px; }
+  .v1 .facts { margin-top:18px; border-top:1px dashed #ddceb4; padding-top:14px; display:flex; flex-direction:column; gap:11px; }
+  .v1 .facts .f { display:flex; justify-content:space-between; font-size:13px; }
+  .v1 .facts .f .k { color:#9a8868; }
+  .v1 .facts .f .v { font-weight:700; }
+  .v1 .facts .f .v .stars { color:#e0a32e; }
+  .v1 .tags { margin-top:16px; display:flex; gap:7px; flex-wrap:wrap; }
+  .v1 .tags span { font-size:11px; background:#efe7d6; color:#8a784f; padding:5px 11px; border-radius:999px; font-weight:600; }
+  .v1 .acts { margin-top:auto; padding:14px 0 14px; display:flex; flex-direction:column; gap:10px; }
+  .v1 .acts .go { background:#b5482f; color:#fff; text-align:center; padding:15px; border-radius:14px; font-weight:800; font-size:15px; }
+  .v1 .acts .sub { display:flex; gap:10px; }
+  .v1 .acts .sub a { flex:1; text-align:center; padding:12px; border-radius:12px; font-size:13px; font-weight:700;
+    background:#efe7d6; color:#8a784f; text-decoration:none; }
+
+  /* =================== V2 : フルブリード写真＋情報シート =================== */
+  .v2 { background:#0d0f12; color:#fff; }
+  .v2 .photo { position:absolute; inset:0; background:linear-gradient(160deg,#3a4a6b,#7b4a8c 60%,#b5485f);
+    display:flex; flex-direction:column; }
+  .v2 .photo:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,0) 30%,rgba(0,0,0,.2) 55%,rgba(8,9,11,.96) 100%); }
+  .v2 .pmeta { position:relative; z-index:2; padding:14px 24px 0; display:flex; justify-content:space-between; align-items:center; }
+  .v2 .pmeta .label { font-size:12px; letter-spacing:.2em; font-weight:800; }
+  .v2 .pmeta .pool { font-size:11px; opacity:.7; }
+  .v2 .sheet { position:absolute; left:0; right:0; bottom:0; z-index:3; padding:0 24px 18px; }
+  .v2 .kick { font-size:12px; color:#ffd24a; font-weight:800; letter-spacing:.05em; }
+  .v2 .nm { font-size:32px; font-weight:800; line-height:1.1; margin-top:8px; }
+  .v2 .sub { font-size:13px; opacity:.85; margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .v2 .sub .dot { opacity:.5; }
+  .v2 .chips { margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; }
+  .v2 .chips .c { background:rgba(255,255,255,.14); backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,.18);
+    padding:8px 12px; border-radius:12px; font-size:12px; font-weight:600; display:flex; gap:6px; align-items:center; }
+  .v2 .chips .c b { color:#ffd24a; font-weight:800; }
+  .v2 .desire { margin-top:16px; }
+  .v2 .desire .dl { font-size:11px; opacity:.7; margin-bottom:6px; }
+  .v2 .desire .stars { font-size:18px; color:#ffd24a; }
+  .v2 .acts { margin-top:18px; display:flex; gap:12px; }
+  .v2 .acts .go { flex:1; background:#fff; color:#111; text-align:center; padding:15px; border-radius:16px; font-weight:800; font-size:15px; }
+  .v2 .acts .skip { width:56px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.16); border-radius:16px; font-size:13px; font-weight:700; }
+  .v2 .statusbar { color:#fff; position:relative; z-index:4; }
+  .v2 .tabbar { position:relative; z-index:4; color:#fff; }
+
+  /* =================== V3 : ミニマル明朝 =================== */
+  .v3 { background:#fbfbfa; color:#1a1a1a; }
+  .v3 .content { padding: 30px 32px 0; display:flex; flex-direction:column; }
+  .v3 .label { font-size:11px; letter-spacing:.3em; color:#bbb; font-weight:700; }
+  .v3 .head { display:flex; justify-content:space-between; align-items:baseline; }
+  .v3 .head .pool { font-size:11px; color:#ccc; }
+  .v3 .nm { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size:34px; font-weight:600; line-height:1.25; margin-top:24px; }
+  .v3 .gnr { font-size:13px; color:#999; margin-top:12px; letter-spacing:.04em; }
+  .v3 .rule { height:1px; background:#ededed; margin:26px 0; }
+  .v3 .facts { display:flex; flex-direction:column; gap:18px; }
+  .v3 .facts .f { display:flex; justify-content:space-between; align-items:baseline; }
+  .v3 .facts .f .k { font-size:12px; color:#aaa; letter-spacing:.08em; }
+  .v3 .facts .f .v { font-size:15px; font-weight:600; }
+  .v3 .facts .f .v.elapsed { font-size:15px; }
+  .v3 .facts .f .v .num { font-size:22px; font-weight:700; }
+  .v3 .facts .f .v .stars { color:#1a1a1a; letter-spacing:2px; }
+  .v3 .facts .f .v .stars .off { color:#dcdcdc; }
+  .v3 .tags { margin-top:24px; font-size:12px; color:#999; }
+  .v3 .tags span:not(:last-child):after { content:" ・ "; color:#ddd; }
+  .v3 .acts { margin-top:auto; padding-bottom:24px; }
+  .v3 .acts .go { background:#1a1a1a; color:#fff; text-align:center; padding:16px; border-radius:0; font-weight:600; font-size:15px; letter-spacing:.06em; }
+  .v3 .acts .sub { margin-top:14px; display:flex; justify-content:space-between; font-size:13px; }
+  .v3 .acts .sub a { color:#999; text-decoration:none; border-bottom:1px solid #e2e2e2; padding-bottom:2px; }
+
+  /* =================== V4 : 抽選チケット =================== */
+  .v4 { background:#12203a; color:#eaf0f7; }
+  .v4 .statusbar { color:#eaf0f7; }
+  .v4 .content { padding: 16px 22px 0; display:flex; flex-direction:column; align-items:center; }
+  .v4 .label { font-size:12px; letter-spacing:.2em; color:#7fa0d6; font-weight:800; }
+  .v4 .pool { font-size:11px; color:#5f73a0; margin-top:4px; }
+  .v4 .ticket { margin-top:18px; width:100%; background:#fdfcf7; color:#1c2740; border-radius:18px; position:relative;
+    box-shadow:0 18px 40px -16px rgba(0,0,0,.6); }
+  .v4 .ticket:before, .v4 .ticket:after { content:""; position:absolute; top:148px; width:26px; height:26px; background:#12203a; border-radius:50%; }
+  .v4 .ticket:before { left:-13px; } .v4 .ticket:after { right:-13px; }
+  .v4 .ticket .perf { position:absolute; top:160px; left:24px; right:24px; border-top:2px dashed #d6d0c0; }
+  .v4 .ticket .tt { padding:18px 22px 22px; }
+  .v4 .ticket .stub { display:flex; justify-content:space-between; align-items:center; }
+  .v4 .ticket .stub .no { font-size:11px; color:#a99; font-weight:700; letter-spacing:.1em; }
+  .v4 .ticket .stub .desire .stars { color:#e0a32e; font-size:15px; }
+  .v4 .ticket .nm { font-size:26px; font-weight:800; margin-top:12px; }
+  .v4 .ticket .gnr { font-size:13px; color:#8a8678; margin-top:6px; }
+  .v4 .ticket .body { padding-top:28px; display:flex; flex-direction:column; gap:12px; }
+  .v4 .ticket .row { display:flex; justify-content:space-between; font-size:13px; }
+  .v4 .ticket .row .k { color:#9a8868; }
+  .v4 .ticket .row .v { font-weight:700; }
+  .v4 .ticket .tags { margin-top:6px; display:flex; gap:6px; flex-wrap:wrap; }
+  .v4 .ticket .tags span { font-size:11px; background:#eef0f4; color:#5a6b8a; padding:4px 10px; border-radius:999px; font-weight:600; }
+  .v4 .acts { margin-top:18px; width:100%; display:flex; flex-direction:column; gap:10px; }
+  .v4 .acts .go { background:#ffd24a; color:#1c2740; text-align:center; padding:15px; border-radius:14px; font-weight:800; font-size:15px; }
+  .v4 .acts .sub { display:flex; gap:10px; }
+  .v4 .acts .sub a { flex:1; text-align:center; padding:12px; border-radius:12px; font-size:13px; font-weight:700;
+    background:#1c2740; color:#9fb0cc; text-decoration:none; }
+
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>ホーム「今日の一店」デザイン案</h1>
+    <p>
+      B案を発展させた方向。「おすすめ＝AIの理由づけ」ではなく、<b>アプリ内のスコアリングで抽選された“今日の一店”</b>を1日1店だけ提示します。
+      開くだけで保存候補を思い出させ、迷わせない。理由づけは外部データ（天気・徒歩分・時間帯）に頼らず、<b>すでに手元にあるデータだけ</b>で成立させます。
+    </p>
+    <div class="note">
+      表示する基本情報：店名／ジャンル／エリア・最寄駅／価格帯／<b>行きたい度</b>／<b>保存からの経過日数</b>／<b>前回スキップ・提案からの経過日数</b>／タグ。<br>
+      抽選ロジックの説明は「保存から143日」「★5なのに未訪問」のような<b>事実の提示</b>で代替し、推論文は出しません。
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- V1 -->
+    <div class="case">
+      <div class="case-label">V1. 日めくり／おみくじ<span class="case-tag">1日1店の儀式感</span></div>
+      <div class="case-desc">日付を大きく出し、めくると今日の一店が現れる。和紙トーンで「今日はこの店」という一期一会の体験に。経過日数や行きたい度を台帳のように並べる。</div>
+      <div class="phone"><div class="notch"></div><div class="screen v1">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="top"><span class="label">本日のおすすめ</span><span class="pool">保存 38 店から抽選</span></div>
+          <div class="date"><span class="day">29</span><span class="ym">2026<br>June · Mon</span></div>
+          <div class="card">
+            <div class="nm">大衆酒場 ことぶき</div>
+            <div class="gnr">焼鳥 ・ 渋谷（徒歩6分）・ ¥3,000</div>
+            <div class="facts">
+              <div class="f"><span class="k">行きたい度</span><span class="v"><span class="stars">★★★★★</span></span></div>
+              <div class="f"><span class="k">保存してから</span><span class="v">143日</span></div>
+              <div class="f"><span class="k">前回スキップ</span><span class="v">30日前</span></div>
+            </div>
+            <div class="tags"><span>友達</span><span>飲み会</span><span>駅近</span></div>
+          </div>
+          <div class="acts">
+            <div class="go">今日はここにする</div>
+            <div class="sub"><a href="#">また後日（スキップ）</a><a href="#">他で決める</a></div>
+          </div>
+        </div>
+        <div class="tabbar v1"><div class="ti on"><span class="ic">📖</span>今日の一店</div><div class="ti"><span class="ic">🎲</span>決める</div><div class="ti"><span class="ic">🔖</span>保存</div></div>
+      </div></div>
+    </div>
+
+    <!-- V2 -->
+    <div class="case">
+      <div class="case-label">V2. フルブリード写真<span class="case-tag">没入・映え</span></div>
+      <div class="case-desc">全面写真の上に情報シートを重ねる没入型。基本情報をガラス調チップで最小限に。ビジュアル重視で「行きたい」を直感的に呼び起こす、最もモダンな方向。</div>
+      <div class="phone"><div class="notch"></div><div class="screen v2">
+        <div class="photo"></div>
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="pmeta"><span class="label">今日の一店</span><span class="pool">38店から抽選</span></div>
+        <div class="sheet">
+          <div class="kick">★★★★★ ずっと行きたかった</div>
+          <div class="nm">大衆酒場<br>ことぶき</div>
+          <div class="sub"><span>焼鳥</span><span class="dot">·</span><span>渋谷 徒歩6分</span><span class="dot">·</span><span>¥3,000</span></div>
+          <div class="chips">
+            <div class="c">⏳ 保存から <b>143日</b></div>
+            <div class="c">↩︎ 前回スキップ <b>30日前</b></div>
+            <div class="c">🍶 友達 / 飲み会</div>
+          </div>
+          <div class="acts">
+            <div class="go">今日はここにする</div>
+            <div class="skip">スキップ</div>
+          </div>
+        </div>
+        <div class="tabbar v2"><div class="ti on"><span class="ic">✨</span>今日</div><div class="ti"><span class="ic">🎲</span>決める</div><div class="ti"><span class="ic">🔖</span>保存</div></div>
+      </div></div>
+    </div>
+
+    <!-- V3 -->
+    <div class="case">
+      <div class="case-label">V3. ミニマル明朝<span class="case-tag">静かで上品</span></div>
+      <div class="case-desc">写真を使わず、明朝体と余白で一店を丁寧に見せる。経過日数を数値で際立たせ、落ち着いて検討させる。写真がまだ無いMVPでも破綻しない実装現実的な案。</div>
+      <div class="phone"><div class="notch"></div><div class="screen v3">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="head"><span class="label">今日の一店</span><span class="pool">保存38店から</span></div>
+          <div class="nm">大衆酒場<br>ことぶき</div>
+          <div class="gnr">焼鳥 ／ 渋谷・徒歩6分 ／ ¥3,000</div>
+          <div class="rule"></div>
+          <div class="facts">
+            <div class="f"><span class="k">行きたい度</span><span class="v"><span class="stars">★★★★★</span></span></div>
+            <div class="f"><span class="k">保存してから</span><span class="v elapsed"><span class="num">143</span> 日</span></div>
+            <div class="f"><span class="k">前回スキップから</span><span class="v elapsed"><span class="num">30</span> 日</span></div>
+          </div>
+          <div class="tags"><span>友達</span><span>飲み会</span><span>駅近</span></div>
+          <div class="acts">
+            <div class="go">今日はここにする</div>
+            <div class="sub"><a href="#">また後日にする</a><a href="#">別の決め方</a></div>
+          </div>
+        </div>
+        <div class="tabbar v3"><div class="ti on"><span class="ic">―</span>今日</div><div class="ti"><span class="ic">―</span>決める</div><div class="ti"><span class="ic">―</span>保存</div></div>
+      </div></div>
+    </div>
+
+    <!-- V4 -->
+    <div class="case">
+      <div class="case-label">V4. 抽選チケット<span class="case-tag">当たりを引いた感</span></div>
+      <div class="case-desc">「38店から1枚を引いた」抽選結果をチケット型で表現。ミシン目や半券で“当たり”感を演出しつつ、半券側に行きたい度、本券側に基本情報を整理。遊び心と情報整理の両立。</div>
+      <div class="phone"><div class="notch"></div><div class="screen v4">
+        <div class="statusbar"><span>9:41</span><span>📶 100%</span></div>
+        <div class="content">
+          <div class="label">本日の抽選結果</div>
+          <div class="pool">保存した 38 店から 1 枚</div>
+          <div class="ticket">
+            <div class="perf"></div>
+            <div class="tt">
+              <div class="stub">
+                <span class="no">No. 0629</span>
+                <span class="desire"><span class="stars">★★★★★</span></span>
+              </div>
+              <div class="nm">大衆酒場 ことぶき</div>
+              <div class="gnr">焼鳥 ・ 渋谷 徒歩6分 ・ ¥3,000</div>
+              <div class="body">
+                <div class="row"><span class="k">保存してから</span><span class="v">143日</span></div>
+                <div class="row"><span class="k">前回スキップ</span><span class="v">30日前</span></div>
+                <div class="tags"><span>友達</span><span>飲み会</span><span>駅近</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="acts">
+            <div class="go">今日はここにする</div>
+            <div class="sub"><a href="#">引き直す（スキップ）</a><a href="#">他で決める</a></div>
+          </div>
+        </div>
+        <div class="tabbar v4"><div class="ti on"><span class="ic">🎟</span>今日</div><div class="ti"><span class="ic">🎲</span>決める</div><div class="ti"><span class="ic">🔖</span>保存</div></div>
+      </div></div>
+    </div>
+
+  </div>
+</body>
+</html>

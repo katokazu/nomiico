@@ -6,6 +6,7 @@
 
 - [mvp.md](mvp.md): 初期リリースのスコープ
 - [user-flows.md](user-flows.md): 主要なユーザージャーニー
+- [home-and-decision-ux.md](home-and-decision-ux.md): ホーム画面と決定UXの方針
 
 ## 新しい仕様のテンプレート
 
