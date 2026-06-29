@@ -11,6 +11,11 @@
 - [domain/product-overview.md](domain/product-overview.md)
 - [specs/mvp.md](specs/mvp.md)
 - [specs/user-flows.md](specs/user-flows.md)
+- [specs/save-flow.md](specs/save-flow.md)
+- [specs/decide-flow.md](specs/decide-flow.md)
+- [specs/scoring.md](specs/scoring.md)
+- [specs/resurfacing.md](specs/resurfacing.md)
+- [specs/csv-import.md](specs/csv-import.md)
 
 ### ドメインモデリング
 
@@ -23,6 +28,7 @@
 
 - [architecture/INDEX.md](architecture/INDEX.md)
 - [architecture/overview.md](architecture/overview.md)
+- [architecture/tech-stack.md](architecture/tech-stack.md)
 - [adr/INDEX.md](adr/INDEX.md)
 
 ### データベース作業
@@ -40,6 +46,10 @@
 - [patterns/INDEX.md](patterns/INDEX.md)
 - [standards/coding.md](standards/coding.md)
 - [testing/strategy.md](testing/strategy.md)
+
+### セキュリティとプライバシー
+
+- [standards/security.md](standards/security.md)
 
 ### ドキュメント作業
 

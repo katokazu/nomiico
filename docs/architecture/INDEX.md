@@ -4,7 +4,8 @@
 
 ## 文書
 
-- [overview.md](overview.md)
+- [overview.md](overview.md): システム構成・レイヤー
+- [tech-stack.md](tech-stack.md): 技術選定
 
 ## 文書を追加するタイミング
 

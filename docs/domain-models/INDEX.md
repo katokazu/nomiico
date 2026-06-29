@@ -5,6 +5,8 @@
 ## 文書
 
 - [restaurant.md](restaurant.md)
+- [tag.md](tag.md)
+- [visit.md](visit.md)
 - [decision-session.md](decision-session.md)
 
 ## モデリング原則

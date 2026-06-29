@@ -4,7 +4,7 @@
 
 ## 文書
 
-- [schema.md](schema.md)
+- [schema.md](schema.md): SQLite スキーマ（テーブル定義・索引・マイグレーション方針）
 
 ## 原則
 
