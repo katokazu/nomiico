@@ -4,7 +4,8 @@ Architecture documents explain the technical shape of the system.
 
 ## Documents
 
-- [overview.md](overview.md)
+- [overview.md](overview.md): システム構成・レイヤー
+- [tech-stack.md](tech-stack.md): 技術選定
 
 ## When To Add Documents
 
