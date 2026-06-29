@@ -4,7 +4,7 @@
 2026-06-30にデザイン検討を行い、本仕様の方向で進めることを決定した。
 画面イメージのモックは [mockups/home-flow.html](../../mockups/home-flow.html)（全体フロー）と [mockups/home-B-refined.html](../../mockups/home-B-refined.html)（ホーム単体）にある。
 
-関連する判断記録は [adr/0001-home-as-daily-pick.md](../adr/0001-home-as-daily-pick.md) を参照。
+関連する判断記録は [adr/0006-home-as-daily-pick.md](../adr/0006-home-as-daily-pick.md) を参照。
 
 ## 目的
 
