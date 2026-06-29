@@ -1,27 +1,27 @@
-# Documentation Standards
+# ドキュメント標準
 
-## Goals
+## 目的
 
-Documentation should help humans and AI agents quickly find the right context without loading every file.
+ドキュメントは、人間とAIエージェントがすべてのファイルを読み込まずに、必要な文脈を素早く見つけられるようにするためのものです。
 
-## Rules
+## ルール
 
-- Keep `AGENTS.md` short and route to deeper docs.
-- Keep each directory's `INDEX.md` current.
-- Add new docs to the nearest `INDEX.md`.
-- Prefer concrete examples over abstract rules.
-- Update docs when behavior changes.
+- `AGENTS.md` は短く保ち、詳細な文書へ案内する。
+- 各ディレクトリの `INDEX.md` を最新に保つ。
+- 新しい文書は最も近い `INDEX.md` に追加する。
+- 抽象的なルールより具体例を優先する。
+- 振る舞いが変わったらドキュメントを更新する。
+- `AGENTS.md` と `docs/` 配下の文書は日本語で記述する。
 
-## File Placement
+## ファイル配置
 
-- Product context: `docs/domain/`
-- Feature specs: `docs/specs/`
-- Domain objects: `docs/domain-models/`
-- Technical architecture: `docs/architecture/`
-- Persistence: `docs/database/`
-- API contracts: `docs/api/`
-- Patterns: `docs/patterns/`
-- Tests: `docs/testing/`
-- Standards: `docs/standards/`
-- Decisions: `docs/adr/`
-
+- プロダクト文脈: `docs/domain/`
+- 機能仕様: `docs/specs/`
+- ドメインオブジェクト: `docs/domain-models/`
+- 技術アーキテクチャ: `docs/architecture/`
+- 永続化: `docs/database/`
+- API契約: `docs/api/`
+- パターン: `docs/patterns/`
+- テスト: `docs/testing/`
+- 標準: `docs/standards/`
+- 判断記録: `docs/adr/`

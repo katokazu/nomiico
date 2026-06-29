@@ -1,12 +1,11 @@
-# Patterns Index
+# パターンインデックス
 
-Implementation patterns and local conventions live here once code exists.
+コードができた後、実装パターンとローカル規約はここに置きます。
 
-## Documents
+## 文書
 
 - [implementation-patterns.md](implementation-patterns.md)
 
-## Rule
+## ルール
 
-Prefer documenting patterns after they appear in code. Avoid inventing abstractions only because a document exists.
-
+パターンはコードに現れてから文書化することを優先してください。文書があるという理由だけで抽象化を作らないでください。

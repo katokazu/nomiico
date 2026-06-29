@@ -1,57 +1,61 @@
 # AGENTS.md
 
-This file is the entry point for AI coding agents working in this repository.
+このファイルは、このリポジトリで作業するAIコーディングエージェント向けの入口です。
 
-Keep this file short. Detailed instructions live under `docs/` and should be loaded only when relevant.
+このファイルは短く保ってください。詳細な指示は `docs/` 配下に置き、必要なときだけ読み込んでください。
 
-## Start Here
+## 最初に読むもの
 
-1. Read [docs/INDEX.md](docs/INDEX.md) to find the right document for the task.
-2. Read [docs/domain/product-overview.md](docs/domain/product-overview.md) before product, UX, or feature work.
-3. Read the relevant area `INDEX.md` before editing code or adding specs.
+1. タスクに合う文書を探すために [docs/INDEX.md](docs/INDEX.md) を読む。
+2. プロダクト、UX、機能に関する作業の前に [docs/domain/product-overview.md](docs/domain/product-overview.md) を読む。
+3. コード編集や仕様追加の前に、関連領域の `INDEX.md` を読む。
 
-## Product North Star
+## プロダクトの北極星
 
-This project is not a restaurant search app. It is an app for turning saved "places I want to go" into an actual decision about where to go today.
+このプロジェクトはレストラン検索アプリではありません。保存した「行きたい場所」を、今日どこに行くかの実際の決定へ変えるためのアプリです。
 
-Core principle:
+中心原則:
 
-> Do not optimize for collecting restaurants. Optimize for deciding and going.
+> 店を集めることに最適化しない。決めて行くことに最適化する。
 
-## Default Behavior
+## デフォルトの振る舞い
 
-- Prefer small, focused changes.
-- Keep MVP scope tight unless the user explicitly asks for expansion.
-- Update related docs when product behavior, architecture, data models, or conventions change.
-- If a decision affects future implementation, record it as an ADR.
-- Do not make the app a weaker clone of Google Maps, Instagram, or Tabelog.
+- 小さく焦点の合った変更を優先する。
+- ユーザーが明示的に拡張を求めない限り、MVPスコープを絞る。
+- プロダクト挙動、アーキテクチャ、データモデル、規約が変わる場合は関連ドキュメントを更新する。
+- 将来の実装に影響する判断はADRに記録する。
+- Googleマップ、Instagram、食べログの弱いクローンにしない。
 
-## Product Decision Checklist
+## ドキュメント記述ルール
 
-Before adding a feature, ask:
+- `AGENTS.md` および `docs/` 配下の各ドキュメントは日本語で記述する。
+- コード識別子、ファイル名、API名、enum値など、実装上の意味を持つ英語は必要に応じてそのまま残す。
 
-- Does it make saving faster?
-- Does it make deciding easier?
-- Does it help old saved candidates resurface?
-- Does it avoid unnecessary input?
-- Does it lead to an actual visit?
-- Does it let memories accumulate naturally?
+## プロダクト判断チェックリスト
 
-## Documentation Map
+機能を追加する前に、次を確認してください。
 
-- [docs/INDEX.md](docs/INDEX.md): documentation router
-- [docs/domain/INDEX.md](docs/domain/INDEX.md): product and business context
-- [docs/specs/INDEX.md](docs/specs/INDEX.md): feature specs and UX flows
-- [docs/domain-models/INDEX.md](docs/domain-models/INDEX.md): domain objects and terminology
-- [docs/architecture/INDEX.md](docs/architecture/INDEX.md): system architecture
-- [docs/database/INDEX.md](docs/database/INDEX.md): schema and persistence
-- [docs/api/INDEX.md](docs/api/INDEX.md): API contracts
-- [docs/patterns/INDEX.md](docs/patterns/INDEX.md): implementation patterns
-- [docs/testing/INDEX.md](docs/testing/INDEX.md): test strategy
-- [docs/standards/INDEX.md](docs/standards/INDEX.md): coding and documentation standards
-- [docs/adr/INDEX.md](docs/adr/INDEX.md): architecture decision records
+- 保存が速くなるか。
+- 決めやすくなるか。
+- 古い保存候補が再浮上しやすくなるか。
+- 不要な入力を避けているか。
+- 実際の訪問につながるか。
+- 思い出が自然に蓄積されるか。
 
-## Current Status
+## ドキュメントマップ
 
-The codebase is currently at the documentation/scaffolding stage. Technology choices are not finalized yet.
+- [docs/INDEX.md](docs/INDEX.md): ドキュメントの入口
+- [docs/domain/INDEX.md](docs/domain/INDEX.md): プロダクトと事業文脈
+- [docs/specs/INDEX.md](docs/specs/INDEX.md): 機能仕様とUXフロー
+- [docs/domain-models/INDEX.md](docs/domain-models/INDEX.md): ドメインオブジェクトと用語
+- [docs/architecture/INDEX.md](docs/architecture/INDEX.md): システムアーキテクチャ
+- [docs/database/INDEX.md](docs/database/INDEX.md): スキーマと永続化
+- [docs/api/INDEX.md](docs/api/INDEX.md): API契約
+- [docs/patterns/INDEX.md](docs/patterns/INDEX.md): 実装パターン
+- [docs/testing/INDEX.md](docs/testing/INDEX.md): テスト戦略
+- [docs/standards/INDEX.md](docs/standards/INDEX.md): コーディングとドキュメントの標準
+- [docs/adr/INDEX.md](docs/adr/INDEX.md): アーキテクチャ判断記録
 
+## 現在の状況
+
+このコードベースは現在、ドキュメントとスキャフォールディングの段階です。技術選定はまだ確定していません。

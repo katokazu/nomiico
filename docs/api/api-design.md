@@ -1,26 +1,25 @@
-# API Design Draft
+# API設計案
 
-## Status
+## 状況
 
-No API implementation exists yet.
+API実装はまだありません。
 
-## Candidate Resources
+## 候補リソース
 
-- Restaurants
-- Tags
-- Visits
-- Decision sessions
-- Decision candidates
+- 店舗（Restaurants）
+- タグ（Tags）
+- 訪問（Visits）
+- 決定セッション（Decision sessions）
+- 決定候補（Decision candidates）
 
-## Design Principles
+## 設計原則
 
-- Saving should tolerate partial data.
-- Decision endpoints should return immediately useful candidates.
-- APIs should distinguish user-owned saved records from external restaurant data.
+- 保存は部分的なデータでも許容する。
+- 決定系エンドポイントは、すぐに役立つ候補を返す。
+- APIでは、ユーザー自身の保存レコードと外部の店舗データを区別する。
 
-## Open Questions
+## 未決事項
 
-- REST, RPC, GraphQL, or framework-native actions?
-- Should metadata extraction be synchronous or asynchronous?
-- Should decision scoring happen server-side or client-side for MVP?
-
+- REST、RPC、GraphQL、またはフレームワークネイティブのアクションのどれにするか。
+- メタデータ抽出は同期処理にするか非同期処理にするか。
+- MVPの決定スコアリングはサーバー側とクライアント側のどちらで行うか。

@@ -1,53 +1,52 @@
-# Documentation Index
+# ドキュメントインデックス
 
-This directory follows a layered documentation structure for AI-assisted development.
+このディレクトリは、AI支援開発のための階層化されたドキュメント構造に従います。
 
-Use this file as the router. Read only the documents needed for the current task.
+このファイルを案内役として使ってください。現在のタスクに必要な文書だけを読んでください。
 
-## Must-Read By Task
+## タスク別に読むべき文書
 
-### Product, UX, or Feature Planning
+### プロダクト、UX、機能計画
 
 - [domain/product-overview.md](domain/product-overview.md)
 - [specs/mvp.md](specs/mvp.md)
 - [specs/user-flows.md](specs/user-flows.md)
 
-### Domain Modeling
+### ドメインモデリング
 
 - [domain/INDEX.md](domain/INDEX.md)
 - [domain-models/INDEX.md](domain-models/INDEX.md)
 - [domain-models/restaurant.md](domain-models/restaurant.md)
 - [domain-models/decision-session.md](domain-models/decision-session.md)
 
-### Architecture or Technical Direction
+### アーキテクチャまたは技術方針
 
 - [architecture/INDEX.md](architecture/INDEX.md)
 - [architecture/overview.md](architecture/overview.md)
 - [adr/INDEX.md](adr/INDEX.md)
 
-### Database Work
+### データベース作業
 
 - [database/INDEX.md](database/INDEX.md)
 - [database/schema.md](database/schema.md)
 
-### API Work
+### API作業
 
 - [api/INDEX.md](api/INDEX.md)
 - [api/api-design.md](api/api-design.md)
 
-### Implementation Work
+### 実装作業
 
 - [patterns/INDEX.md](patterns/INDEX.md)
 - [standards/coding.md](standards/coding.md)
 - [testing/strategy.md](testing/strategy.md)
 
-### Documentation Work
+### ドキュメント作業
 
 - [standards/documentation.md](standards/documentation.md)
 
-## Project-Specific Source of Truth
+## プロジェクト固有の信頼できる情報源
 
-The main product concept lives in [domain/product-overview.md](domain/product-overview.md).
+主要なプロダクトコンセプトは [domain/product-overview.md](domain/product-overview.md) にあります。
 
-When docs conflict, prefer the more specific document. If conflict remains, update the stale document while making the change.
-
+ドキュメント間で矛盾がある場合は、より具体的な文書を優先してください。それでも矛盾が残る場合は、変更と合わせて古い文書を更新してください。

@@ -1,9 +1,8 @@
-# Standards Index
+# 標準インデックス
 
-Coding and documentation standards live here.
+コーディングとドキュメントの標準はここに置きます。
 
-## Documents
+## 文書
 
 - [coding.md](coding.md)
 - [documentation.md](documentation.md)
-

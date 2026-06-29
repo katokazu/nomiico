@@ -1,21 +1,20 @@
-# ADR Index
+# ADRインデックス
 
-Architecture Decision Records capture decisions that should not be rediscovered repeatedly.
+ADR（アーキテクチャ判断記録）は、繰り返し再検討すべきでない判断を記録します。
 
-## Records
+## 記録
 
-No ADRs yet.
+ADRはまだありません。
 
-## Template
+## テンプレート
 
-Use [template.md](template.md) for new records.
+新しい記録には [template.md](template.md) を使ってください。
 
-## Naming
+## 命名
 
-Use numbered filenames:
+番号付きのファイル名を使ってください。
 
 ```text
 0001-short-title.md
 0002-short-title.md
 ```
-

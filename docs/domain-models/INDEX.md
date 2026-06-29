@@ -1,16 +1,15 @@
-# Domain Models Index
+# ドメインモデルインデックス
 
-Domain models describe important objects and language used across the product.
+ドメインモデルは、プロダクト全体で使う重要なオブジェクトと言葉を説明します。
 
-## Documents
+## 文書
 
 - [restaurant.md](restaurant.md)
 - [decision-session.md](decision-session.md)
 
-## Modeling Principles
+## モデリング原則
 
-- Keep early models simple.
-- Prefer optional enrichment over required setup.
-- Separate decision data from memory/visit data.
-- Preserve the source URL because it is the common import format.
-
+- 初期モデルはシンプルに保つ。
+- 必須の事前設定よりも任意の情報補完を優先する。
+- 決定データと思い出 / 訪問データを分ける。
+- 元URLは共通の取り込み形式であるため保持する。

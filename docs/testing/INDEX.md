@@ -1,15 +1,14 @@
-# Testing Index
+# テストインデックス
 
-Testing documents define what needs verification and how.
+テスト文書は、何をどのように検証するかを定義します。
 
-## Documents
+## 文書
 
 - [strategy.md](strategy.md)
 
-## Priorities
+## 優先事項
 
-- Saving does not lose user intent.
-- Decision modes produce valid candidates.
-- Filters do not hide all candidates unexpectedly.
-- Visit records are tied to the correct restaurant.
-
+- 保存時にユーザーの意図を失わない。
+- 決定モードが有効な候補を生成する。
+- フィルタによって予期せず全候補が隠れない。
+- 訪問記録が正しい店舗に紐づく。

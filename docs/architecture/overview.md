@@ -1,29 +1,28 @@
-# Architecture Overview
+# アーキテクチャ概要
 
-## Status
+## 状況
 
-Technology choices are not finalized.
+技術選定はまだ確定していません。
 
-## Expected System Responsibilities
+## 想定されるシステム責務
 
-- Save restaurant candidates from URL or manual input
-- Store user-owned restaurant data
-- Support decision modes
-- Support visit records
-- Support notifications or resurfacing logic
-- Integrate with external map URLs
+- URLまたは手動入力から飲食店候補を保存する
+- ユーザー自身の店舗データを保存する
+- 決定モードをサポートする
+- 訪問記録をサポートする
+- 通知または再浮上ロジックをサポートする
+- 外部地図URLと連携する
 
-## Initial Architecture Questions
+## 初期アーキテクチャの論点
 
-- Mobile-first app, web app, or both?
-- Where should metadata extraction happen?
-- What backend should store user data?
-- How should notifications be scheduled?
-- What auth model is needed for MVP?
+- モバイルファーストアプリ、Webアプリ、またはその両方のどれにするか。
+- メタデータ抽出はどこで行うべきか。
+- ユーザーデータを保存するバックエンドは何にするか。
+- 通知はどのようにスケジュールするか。
+- MVPに必要な認証モデルは何か。
 
-## Constraints
+## 制約
 
-- Saving must be fast.
-- External services should be used where they are already better, such as maps and navigation.
-- The app should not depend on perfect metadata extraction.
-
+- 保存は速くなければならない。
+- 地図や経路検索など、既存サービスの方が優れている領域では外部サービスを使う。
+- アプリは完全なメタデータ抽出に依存しない。

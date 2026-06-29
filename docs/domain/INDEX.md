@@ -1,25 +1,24 @@
-# Domain Index
+# ドメインインデックス
 
-Domain documents describe what the product is, who it serves, and which product decisions should guide implementation.
+ドメイン文書は、プロダクトが何であり、誰に向けたもので、どのプロダクト判断が実装を導くべきかを説明します。
 
-## Documents
+## 文書
 
-- [product-overview.md](product-overview.md): product concept, problem, MVP scope, data model draft, future direction
+- [product-overview.md](product-overview.md): プロダクトコンセプト、課題、MVPスコープ、データモデル案、将来方針
 
-## When To Read
+## 読むタイミング
 
-Read these documents before:
+次の作業の前に読んでください。
 
-- Planning a feature
-- Changing UX behavior
-- Naming domain concepts
-- Changing prioritization
-- Writing user-facing copy
+- 機能を計画する
+- UXの振る舞いを変更する
+- ドメイン概念に名前を付ける
+- 優先順位を変更する
+- ユーザー向け文言を書く
 
-## Domain Rules
+## ドメインルール
 
-- The app exists to decide where to go, not to collect restaurant data.
-- Saved candidates should resurface at useful moments.
-- Registration should remain lightweight.
-- Detailed data should grow when it becomes useful.
-
+- このアプリはレストランデータを集めるためではなく、どこに行くかを決めるために存在する。
+- 保存済み候補は有用なタイミングで再浮上すべき。
+- 登録は軽量に保つ。
+- 詳細データは、それが有用になった時点で育つべき。

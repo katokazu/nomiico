@@ -1,24 +1,23 @@
-# Testing Strategy
+# テスト戦略
 
-## Current Status
+## 現在の状況
 
-No test framework is selected yet.
+テストフレームワークはまだ選定されていません。
 
-## MVP Test Focus
+## MVPで重視するテスト
 
-- Save restaurant with minimum required data
-- Save restaurant when metadata extraction fails
-- List saved restaurants
-- Filter candidates
-- Run gacha decision
-- Run swipe decision
-- Mark restaurant as visited
-- Add visit rating
+- 最小限の必須データで店舗を保存できる
+- メタデータ抽出に失敗しても店舗を保存できる
+- 保存済み店舗を一覧表示できる
+- 候補をフィルタできる
+- ガチャ決定を実行できる
+- スワイプ決定を実行できる
+- 店舗を訪問済みにできる
+- 訪問評価を追加できる
 
-## Future Test Types
+## 将来のテスト種別
 
-- Unit tests for scoring and filtering
-- Integration tests for persistence
-- End-to-end tests for core user flows
-- Visual checks for key decision screens
-
+- スコアリングとフィルタリングのユニットテスト
+- 永続化の結合テスト
+- 主要ユーザーフローのE2Eテスト
+- 主要な決定画面のビジュアルチェック

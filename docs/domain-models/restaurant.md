@@ -1,12 +1,12 @@
-# Restaurant
+# 店舗（Restaurant）
 
-## Meaning
+## 意味
 
-A saved place the user may want to visit.
+ユーザーが訪問したいかもしれない保存済みの場所。
 
-The model represents the user's saved candidate, not a globally complete restaurant record.
+このモデルは、網羅的な店舗マスタではなく、ユーザーが保存した候補を表す。
 
-## Initial Fields
+## 初期フィールド
 
 - `id`
 - `name`
@@ -25,9 +25,8 @@ The model represents the user's saved candidate, not a globally complete restaur
 - `last_suggested_at`
 - `last_visited_at`
 
-## Notes
+## 補足
 
-- `source_url` should be retained even when metadata extraction fails.
-- Missing metadata should not block saving.
-- Tags and visit history should be modeled separately.
-
+- メタデータ抽出に失敗しても `source_url` は保持する。
+- メタデータ不足によって保存を妨げない。
+- タグと訪問履歴は別モデルとして扱う。

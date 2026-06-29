@@ -1,21 +1,20 @@
-# Coding Standards
+# コーディング標準
 
-## Current Status
+## 現在の状況
 
-No language or framework has been selected yet.
+言語やフレームワークはまだ選定されていません。
 
-## General Standards
+## 一般標準
 
-- Follow existing project conventions once code exists.
-- Keep changes focused.
-- Avoid speculative abstractions.
-- Prefer clear naming from the domain documents.
-- Keep MVP behavior simple and observable.
-- Treat incomplete metadata as a normal case.
+- コードができた後は、既存のプロジェクト規約に従う。
+- 変更は焦点を絞る。
+- 推測による抽象化を避ける。
+- ドメイン文書に基づく明確な命名を優先する。
+- MVPの振る舞いはシンプルで観察可能に保つ。
+- 不完全なメタデータを通常のケースとして扱う。
 
-## UI Standards
+## UI標準
 
-- Prioritize fast saving and fast deciding.
-- Do not make list management the primary experience.
-- Ask for optional details only when they become useful.
-
+- 速く保存でき、速く決められることを優先する。
+- 一覧管理を主要体験にしない。
+- 任意の詳細情報は、それが有用になったタイミングでのみ求める。

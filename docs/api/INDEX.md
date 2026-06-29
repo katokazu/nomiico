@@ -1,12 +1,11 @@
-# API Index
+# APIインデックス
 
-API documentation describes external and internal contracts.
+API文書は、外部および内部の契約を説明します。
 
-## Documents
+## 文書
 
 - [api-design.md](api-design.md)
 
-## When To Add Details
+## 詳細を追加するタイミング
 
-Add endpoint or contract docs when backend APIs are introduced.
-
+バックエンドAPIを導入するときに、エンドポイントまたは契約の文書を追加してください。

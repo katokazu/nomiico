@@ -1,10 +1,10 @@
-# Decision Session
+# 決定セッション（Decision Session）
 
-## Meaning
+## 意味
 
-A temporary interaction where one or more users decide which restaurant to visit.
+1人以上のユーザーが、どの飲食店に行くかを決めるための一時的なやり取り。
 
-## Candidate Modes
+## 候補モード
 
 - `gacha`
 - `swipe`
@@ -13,7 +13,7 @@ A temporary interaction where one or more users decide which restaurant to visit
 - `tournament`
 - `roulette`
 
-## Initial Fields
+## 初期フィールド
 
 - `id`
 - `mode`
@@ -22,12 +22,11 @@ A temporary interaction where one or more users decide which restaurant to visit
 - `created_at`
 - `completed_at`
 
-## Candidate Data
+## 候補データ
 
-Each session can have multiple candidates with score and rank.
+各セッションは、スコアと順位を持つ複数の候補を持てる。
 
-## Notes
+## 補足
 
-- Decision sessions are not just analytics. They are part of the product's core value.
-- Group decision features can be delayed until after the single-user decision experience works well.
-
+- 決定セッション（Decision Session）は単なる分析データではなく、プロダクトの中核価値の一部である。
+- 複数人で決める機能は、1人で決める体験が十分に機能してからでもよい。

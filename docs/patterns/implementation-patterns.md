@@ -1,21 +1,20 @@
-# Implementation Patterns
+# 実装パターン
 
-## Status
+## 状況
 
-No implementation patterns are established yet.
+確立済みの実装パターンはまだありません。
 
-## Future Sections
+## 将来追加するセクション
 
-- Routing
-- State management
-- Form handling
-- Data fetching
-- Error handling
-- Background jobs
-- Notification scheduling
-- Metadata extraction
+- ルーティング
+- 状態管理
+- フォーム処理
+- データ取得
+- エラー処理
+- バックグラウンドジョブ
+- 通知スケジューリング
+- メタデータ抽出
 
-## Guidance
+## 指針
 
-When the first implementation lands, document only the patterns that are actually used.
-
+最初の実装が入ったら、実際に使われているパターンだけを文書化してください。

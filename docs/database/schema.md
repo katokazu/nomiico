@@ -1,8 +1,8 @@
-# Database Schema Draft
+# データベーススキーマ案
 
-## Tables
+## テーブル
 
-Initial candidate tables:
+初期候補となるテーブル:
 
 - `restaurants`
 - `tags`
@@ -11,17 +11,16 @@ Initial candidate tables:
 - `decision_sessions`
 - `decision_candidates`
 
-## Restaurant Data
+## 店舗データ
 
-See [../domain-models/restaurant.md](../domain-models/restaurant.md).
+[../domain-models/restaurant.md](../domain-models/restaurant.md) を参照してください。
 
-## Decision Data
+## 決定データ
 
-See [../domain-models/decision-session.md](../domain-models/decision-session.md).
+[../domain-models/decision-session.md](../domain-models/decision-session.md) を参照してください。
 
-## Open Questions
+## 未決事項
 
-- Should source metadata be stored as structured columns, raw JSON, or both?
-- Should tags be user-defined, system-defined, or mixed?
-- How should archived candidates affect decision sessions?
-
+- ソースメタデータは構造化カラム、raw JSON、またはその両方のどれで保存するか。
+- タグはユーザー定義、システム定義、または混在のどれにするか。
+- アーカイブ済み候補を決定セッションでどう扱うか。
