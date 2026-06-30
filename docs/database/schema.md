@@ -30,6 +30,22 @@
 | created_at | TEXT | NOT NULL | 生成日時(UTC ISO8601) |
 | remote_user_id | TEXT | NULL可 | 将来のリモート ID（昇格時にマッピング） |
 
+### user_settings
+
+設定画面（[home-and-decision-ux](../specs/home-and-decision-ux.md) §設定）と通知（[resurfacing](../specs/resurfacing.md)）の永続化。owner ごとに 1 行（初回起動で既定値をシード）。
+
+| カラム | 型 | 制約 | 説明 |
+|---|---|---|---|
+| owner_id | TEXT | PK, FK app_user.id | 所有者（1:1） |
+| notifications_enabled | INTEGER | NOT NULL, default 1 | 通知 ON/OFF（OS 許可とは別のアプリ内トグル） |
+| notify_times | TEXT | NULL可 | 通知する時間帯（JSON 配列, 例 `["11:00","17:00"]`） |
+| notify_max_per_day | INTEGER | NOT NULL, default 1 | 1 日あたり通知上限（[resurfacing](../specs/resurfacing.md)） |
+| resurface_after_days | INTEGER | NOT NULL, default 90 | 寝かせ再浮上のしきい日数（[resurfacing](../specs/resurfacing.md)） |
+| notif_permission_status | TEXT | NOT NULL, default `unasked` | enum: `unasked`/`granted`/`denied`/`deferred`。初回保存後シートの状態（[save-flow](../specs/save-flow.md)） |
+| updated_at | TEXT | NOT NULL | 更新日時(UTC) |
+
+- `notif_permission_status = unasked` の間は、初回保存完了後に文脈付き許可シートを出す。`deferred`（あとで）はシート再提示を抑制し、設定からはいつでもオンにできる。
+
 ### restaurants
 
 ユーザーが保存した「行きたい候補」。完全な店舗マスタではない（[restaurant model](../domain-models/restaurant.md)）。
@@ -100,14 +116,19 @@ PK (restaurant_id, tag_id)。インデックス `idx_restaurant_tags_tag` (tag_i
 | id | TEXT | PK | UUID |
 | owner_id | TEXT | NOT NULL, FK | |
 | restaurant_id | TEXT | NOT NULL, FK restaurants.id ON DELETE CASCADE | |
+| decision_session_id | TEXT | NULL可, FK decision_sessions.id ON DELETE SET NULL | この訪問につながった決定セッション（記録うながし・決定→訪問の転換計測用） |
 | visited_at | TEXT | NOT NULL | 訪問日時(UTC) |
 | rating | INTEGER | NULL可 | 1..5 |
 | memo | TEXT | NULL可 | |
-| companion | TEXT | NULL可 | 同行者 |
-| revisit | INTEGER | NULL可 | 0/1 また行きたいか |
+| companion | TEXT | NULL可 | 同行者（複数は区切り文字で連結。UI はチップ表示） |
+| revisit | TEXT | NULL可 | enum: `yes`(また行きたい)/`meh`(うーん)/`no`(もういい)。記録画面の3値セグメント |
+| photo_uri | TEXT | NULL可 | ユーザー撮影/添付写真のローカル URI（思い出カードのヒーロー画像） |
 | created_at | TEXT | NOT NULL | |
 
-インデックス `idx_visits_restaurant` (restaurant_id)。
+インデックス `idx_visits_restaurant` (restaurant_id)、`idx_visits_session` (decision_session_id)。
+
+- `revisit = 'no'`（もういい）は店舗のアーカイブ提案のトリガにできる（[home-and-decision-ux](../specs/home-and-decision-ux.md) 記録タブ）。実際の `archived` 更新は別操作。
+- 写真は MVP では 1 訪問 1 枚（`photo_uri`）。複数枚は将来 `visit_photos` テーブルへ切り出す（下記「未決事項」）。
 
 ### import_batches
 
@@ -133,14 +154,19 @@ CSV 一括取り込みの単位（[csv-import](../specs/csv-import.md)）。Undo
 |---|---|---|---|
 | id | TEXT | PK | UUID |
 | owner_id | TEXT | NOT NULL, FK | |
-| mode | TEXT | NOT NULL | enum: `gacha`/`swipe`/`roulette`/`draft`/`vote`/`tournament`（後 3 つは将来） |
+| mode | TEXT | NOT NULL | enum: `gacha`/`swipe`/`roulette`/`vote`/`ranking`/`draft`/`tournament`。MVP: gacha/swipe/roulette + 単一端末回し決めの vote/ranking。draft/tournament（真の複数端末同期）は将来（[ADR 0005](../adr/0005-decision-engine-scope.md)） |
 | status | TEXT | NOT NULL | enum: `active`/`completed`/`cancelled` |
 | filters | TEXT | NULL可 | 適用フィルタ(JSON: area/genre/people/scene/budget/tags) |
+| participant_count | INTEGER | NULL可 | 「みんなで」回し決めの参加人数（vote/ranking。単独モードは NULL） |
 | decided_restaurant_id | TEXT | NULL可, FK restaurants.id | 決定した店 |
+| record_prompt_dismissed_at | TEXT | NULL可 | 記録うながしバナーを閉じた/記録した日時。未記録検出から外す（[home-and-decision-ux](../specs/home-and-decision-ux.md) 記録うながし） |
 | created_at | TEXT | NOT NULL | |
 | completed_at | TEXT | NULL可 | |
 
 インデックス `idx_sessions_owner_status` (owner_id, status)。
+
+- **記録うながし**の検出: `status = completed` かつ `decided_restaurant_id` 有り かつ `record_prompt_dismissed_at` が NULL かつ当該セッションを参照する `visits` が無いもの。`visits.decision_session_id` で結ぶ。
+- 回し決め（vote/ranking）は単一端末・同期不要のため MVP 対象。参加者個人の識別子は持たず、集計のみ保持する（[decision-session model](../domain-models/decision-session.md)）。
 
 ### decision_candidates
 
@@ -151,9 +177,12 @@ CSV 一括取り込みの単位（[csv-import](../specs/csv-import.md)）。Undo
 | id | TEXT | PK | UUID |
 | session_id | TEXT | NOT NULL, FK decision_sessions.id ON DELETE CASCADE | |
 | restaurant_id | TEXT | NOT NULL, FK restaurants.id ON DELETE CASCADE | |
-| score | INTEGER | NULL可 | スコア（[scoring](../specs/scoring.md)） |
-| rank | INTEGER | NULL可 | 順位 |
+| score | INTEGER | NULL可 | 「今行くべき」スコア（[scoring](../specs/scoring.md)）。gacha 抽選重み・swipe 初期並び用 |
+| rank | INTEGER | NULL可 | 最終順位（結果表示用） |
 | swipe_result | TEXT | NULL可 | enum: `kept`/`rejected`/`pending`（swipe モード用） |
+| tally | INTEGER | NOT NULL, default 0 | みんなで回し決めの集計値。vote は得票数、ranking は全員ぶんの加点合計（上位 3 件に 3/2/1 等）。[decide-flow](../specs/decide-flow.md) |
+
+インデックス `idx_candidates_session` (session_id)。
 
 ## 店舗データ
 
@@ -165,10 +194,10 @@ CSV 一括取り込みの単位（[csv-import](../specs/csv-import.md)）。Undo
 
 ## 未決事項
 
-- ソースメタデータは構造化カラム、raw JSON、またはその両方のどれで保存するか。
-- タグはユーザー定義、システム定義、または混在のどれにするか。
-- アーカイブ済み候補を決定セッションでどう扱うか。
-インデックス `idx_candidates_session` (session_id)。
+- 最寄駅からの所要（モックの「徒歩6分」）を別カラムにするか、`nearest_station` 文字列に内包するか（[home-and-decision-ux](../specs/home-and-decision-ux.md) 未決事項）。MVP は座標を持たないため計算ではなく保存時の静的値。当面は `nearest_station` に内包し、別カラム化は需要を見て判断。
+- 1 訪問あたりの写真を複数枚にするか（現状 `visits.photo_uri` 1 枚。将来 `visit_photos` テーブル）。
+- ranking（順位制）の加点配分（候補数可変。上位 3 件に 3/2/1 が有力だが未確定）と vote 同票時の決着（[decide-flow](../specs/decide-flow.md)）。
+- `genre`（店舗の単一文字列属性）と `food` カテゴリのタグの関係。両者は別物として併存させ、手動フォームのジャンルチップは DB マスタではなく UI プリセットとして扱う。
 
 ## 削除規則
 
@@ -178,10 +207,15 @@ CSV 一括取り込みの単位（[csv-import](../specs/csv-import.md)）。Undo
 ## マイグレーション
 
 - Drizzle のマイグレーションファイルで管理。スキーマ変更は必ずマイグレーションを追加。
-- アプリ起動時に未適用マイグレーションを実行し、初回はプリセットタグをシードする。
+- アプリ起動時に未適用マイグレーションを実行し、初回はプリセットタグと `user_settings` 既定行をシードする。
 
 ## Open Questions（解消済み）
 
 - ~~ソースメタデータは構造化 / JSON / 両方か~~ → **両方**（構造化カラム + `raw_metadata`）。
 - ~~タグはユーザー定義 / システム定義 / 混在か~~ → **混在**（`is_system`）。
 - ~~アーカイブ済み候補は決定セッションへどう影響するか~~ → **候補抽出から除外**。
+- ~~「また行きたい」は 2 値か~~ → **3 値**（`revisit` enum `yes`/`meh`/`no`。記録画面の3セグメント）。
+- ~~訪問の写真をどこに持つか~~ → **`visits.photo_uri`**（MVP 1 枚、複数枚は将来）。
+- ~~通知/アプリ設定の永続化先~~ → **`user_settings` テーブル**（owner 1:1）。
+- ~~決定と訪問の紐付け~~ → **`visits.decision_session_id`**（記録うながし検出・転換計測）。
+- ~~みんなで（投票/順位）の扱い~~ → **単一端末回し決めとして MVP 対象**。`mode` に `vote`/`ranking`、集計は `decision_candidates.tally`、人数は `decision_sessions.participant_count`（[ADR 0005](../adr/0005-decision-engine-scope.md) 改訂）。

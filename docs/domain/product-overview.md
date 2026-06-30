@@ -242,6 +242,8 @@ AI機能は将来的に有効だが、MVPでは「決める体験」の完成度
 
 ## 7. データモデル案
 
+> これは初期スケッチである。正となる定義は [database/schema.md](../database/schema.md) と [domain-models/](../domain-models/INDEX.md)、型は [api/api-design.md](../api/api-design.md)。矛盾時は具体的な文書を優先する。
+
 ### 店舗（Restaurant）
 
 | フィールド | 型 | 説明 |
@@ -293,18 +295,21 @@ AI機能は将来的に有効だが、MVPでは「決める体験」の完成度
 | id | UUID | 訪問ID |
 | restaurant_id | UUID | 店ID |
 | visited_at | datetime | 訪問日時 |
+| decision_session_id | UUID | 決定セッション（任意・記録うながし用） |
 | rating | int | 評価 |
 | memo | text | メモ |
 | companion | string | 同行者 |
-| revisit | boolean | また行きたいか |
+| revisit | enum | また行きたいか（yes / meh / no） |
+| photo_uri | string | 写真（ローカルURI・任意） |
 
 ### 決定セッション（DecisionSession）
 
 | フィールド | 型 | 説明 |
 |---|---|---|
 | id | UUID | セッションID |
-| mode | enum | gacha / swipe / draft / vote / tournament / roulette |
+| mode | enum | gacha / swipe / roulette / vote / ranking / draft / tournament |
 | status | enum | active / completed / cancelled |
+| participant_count | int | みんなで回し決めの人数（任意） |
 | decided_restaurant_id | UUID | 決定した店ID |
 | created_at | datetime | 作成日時 |
 | completed_at | datetime | 完了日時 |
@@ -318,6 +323,7 @@ AI機能は将来的に有効だが、MVPでは「決める体験」の完成度
 | restaurant_id | UUID | 店ID |
 | score | int | スコア |
 | rank | int | 順位 |
+| tally | int | みんなで集計（得票数 / 順位点合計） |
 
 ## 8. 「今行くべき」スコア
 

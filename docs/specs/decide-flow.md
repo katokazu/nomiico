@@ -4,11 +4,11 @@
 
 ## Goal
 
-保存済み候補から「今日どこに行くか」を 1 件に確定する。MVP は単独利用の gacha / swipe / roulette（[ADR 0005](../adr/0005-decision-engine-scope.md)）。
+保存済み候補から「今日どこに行くか」を 1 件に確定する。MVP は同一端末で完結する gacha / swipe / roulette と、1 台を回す「みんなで」vote / ranking（[ADR 0005](../adr/0005-decision-engine-scope.md) 改訂）。
 
 ## Non-Goals
 
-- グループ決定（draft / vote / tournament）。リモート導入後。
+- 真の複数端末同期を要するグループ決定（draft / tournament）。リモート導入後。
 - 検索・一覧管理を主役にすること。
 
 ## 共通: 候補抽出
@@ -68,6 +68,27 @@
 - gacha の抽選ロジックを再利用（スコア重み or 等確率を選択可、MVP は等確率で十分）。
 - 確定後は gacha と同じ完了処理。
 
+## モード 4: みんなで / 回し決め (vote / ranking)
+
+1 台のスマホを友人間で回し、順番にタップする。招待リンク・アカウント・同期サーバー不要（[home-and-decision-ux](home-and-decision-ux.md) §経路4）。`startSession('vote'|'ranking', filter, { participantCount })` で開始し、母数は他モードと同じ `pickCandidates` か保存タブからの手選択集合。
+
+### 投票制 (vote)
+
+1. 候補一覧を提示。現在の参加者が 1 票を入れる → `castVote(sessionId, restaurantId)`（候補の `tally`++）。
+2. 「次の人へ」で人数ぶん繰り返す（進捗「3 / 4人目」は `participant_count` と記録済み票数から算出）。
+3. 全員終了で `tally` 最大の候補に決定 → `complete`。
+
+### 順位制 (ranking)
+
+1. 候補を好きな順に並べる → `castRanking(sessionId, ranked[])`。上位から 3/2/1 …（配分は未決、下記）を `tally` に加算。
+2. 人数ぶん繰り返す。
+3. 全員ぶんの合計 `tally` が最大の店に決定 → `complete`。同点時の決着は未決。
+
+### ロジック共通
+
+- 参加者個人の識別子は保存しない（集計のみ）。中断復帰時は記録済み `tally` と票数から続行。
+- 決定後は他モードと同じ完了処理（外部マップ・記録うながし）へ合流。
+
 ## 完了後（Go）
 
 - 確定店の `source_url` を外部で開く（Googleマップ URL ならマップアプリ、それ以外はブラウザ）。
@@ -89,3 +110,5 @@
 
 - gacha の重み付き抽選とスコア順提示のどちらをスワイプ初期順にするか（A/B 余地）。
 - 「もう一回」の重み減衰の強さ（チューニング、[scoring](scoring.md) と連動）。
+- ranking の加点配分（候補数可変。上位 3 件に 3/2/1 が有力だが未確定）。
+- vote 同票 1 位時の決着（ルーレットへ流す等）。

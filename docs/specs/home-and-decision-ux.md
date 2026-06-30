@@ -126,7 +126,7 @@
 ## データ要件
 
 - 既存の `Restaurant`（`desire_level`, `created_at`, `last_suggested_at`, `last_visited_at`, `visited`, `archived`, タグ等）で今日の一店の抽選と表示要件を満たす。
-- 決定モードは `DecisionSession.mode` に `gacha` / `swipe` / `vote` / `draft` / `tournament` / `roulette` を持つ。みんなでの投票制・順位制は `vote` を基本に表現する（順位制の扱いは未決、後述）。
+- 決定モードは `DecisionSession.mode` に `gacha` / `swipe` / `roulette` / `vote` / `ranking` / `draft` / `tournament` を持つ。みんなでの投票制は `vote`、順位制は `ranking`。人数は `participant_count`、集計は `decision_candidates.tally` に保持する（[database/schema.md](../database/schema.md) / [ADR 0005](../adr/0005-decision-engine-scope.md) 改訂）。`draft` / `tournament` は将来。
 - エリア・最寄駅・価格帯は保存時点の静的データを表示し、現在地からの実測距離は使わない。
 
 ## エッジケース
