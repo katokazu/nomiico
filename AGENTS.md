@@ -55,16 +55,19 @@
 - [docs/testing/INDEX.md](docs/testing/INDEX.md): テスト戦略
 - [docs/standards/INDEX.md](docs/standards/INDEX.md): コーディングとドキュメントの標準
 - [docs/adr/INDEX.md](docs/adr/INDEX.md): アーキテクチャ判断記録
-設計フェーズ。主要な技術・方針は決定済み（[docs/adr/INDEX.md](docs/adr/INDEX.md)）。実装はまだ未着手。
+
+## 技術・方針（決定済み、[docs/adr/INDEX.md](docs/adr/INDEX.md)）
 
 - プラットフォーム: Expo / React Native（モバイル）
 - データ: 端末ローカル SQLite ファースト（将来 Supabase 同期シーム）
 - 認証: 匿名ローカル → 任意昇格
 - メタデータ: OGP + 連携元保存 + 手動補完（無料運用、Google API 不使用）
-- 決定モード MVP: gacha / swipe / roulette
+- 決定モード MVP: gacha / swipe / roulette / vote / ranking
 
 実装前に [docs/architecture/overview.md](docs/architecture/overview.md) と該当 spec を読むこと。
 
 ## 現在の状況
 
-このコードベースは現在、ドキュメントとスキャフォールディングの段階です。技術選定はまだ確定していません。
+`src/` 配下にプログラムのひな型（Expo Router 画面、ドメイン層、Repository インターフェース、
+Drizzle スキーマ、サービス層のスタブ）を作成済み。永続化・スコアリング・決定モードなどの
+実処理はこれから実装する。構成は [docs/patterns/implementation-patterns.md](docs/patterns/implementation-patterns.md) を参照。
