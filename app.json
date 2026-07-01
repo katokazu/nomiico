@@ -8,10 +8,12 @@
     "scheme": "nomiico",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "com.katokazu.nomiico",
       "icon": "./assets/expo.icon",
       "supportsTablet": false
     },
     "android": {
+      "package": "com.katokazu.nomiico",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -24,7 +26,19 @@
       "expo-router",
       "expo-secure-store",
       "expo-notifications",
-      "expo-share-intent",
+      [
+        "expo-share-intent",
+        {
+          "iosActivationRules": {
+            "NSExtensionActivationSupportsText": true,
+            "NSExtensionActivationSupportsWebURLWithMaxCount": 1,
+            "NSExtensionActivationSupportsWebPageWithMaxCount": 1
+          },
+          "androidIntentFilters": [
+            "text/*"
+          ]
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -32,10 +46,18 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
-      ]
+      ],
+      "expo-sqlite",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b6acce9d-ce61-4f0e-aadc-8c7cbc9f6ac2"
+      }
     }
   }
 }
