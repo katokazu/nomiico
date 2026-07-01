@@ -43,6 +43,27 @@ const SOURCE_TYPE_HOST_RULES: { match: (host: string) => boolean; type: SourceTy
   { match: (host) => host.includes("line.me") || host.includes("lin.ee"), type: "line" },
 ];
 
+const URL_PATTERN = /https?:\/\/[^\s"'<>]+/i;
+
+/**
+ * テキストに含まれる最初の有効なURLを抽出する (docs/specs/save-flow.md #エントリポイント3)。
+ * 複数URLを含むテキストは最初の1件のみ採用する(docs/specs/save-flow.md #エッジケース)。
+ */
+export function extractFirstUrl(text: string): string | undefined {
+  const match = text.match(URL_PATTERN);
+  if (!match) {
+    return undefined;
+  }
+  try {
+    // 末尾の全角・半角句読点はURLの一部でないことが多いため取り除く
+    const trimmed = match[0].replace(/[)\]}、。」』.,!?]+$/, "");
+    new URL(trimmed);
+    return trimmed;
+  } catch {
+    return undefined;
+  }
+}
+
 /** ホスト名ベースでsource_typeを判定 (docs/specs/save-flow.md #source_type判定)。 */
 export function detectSourceType(sourceUrl: string | undefined): SourceType {
   if (!sourceUrl) {

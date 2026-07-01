@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
+import { ShareIntentProvider, useShareIntentContext } from "expo-share-intent";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
@@ -11,15 +12,32 @@ const queryClient = new QueryClient();
  * ルートレイアウト (docs/patterns/implementation-patterns.md #ルーティング)。
  * 永続データはTanStack Query経由でRepositoryを呼ぶ。
  * マイグレーション/owner初期化/システムタグシードが終わるまで画面を出さない。
+ * ShareIntentProviderで共有シート受信を検知し、保存完了画面(save)へ誘導する
+ * (docs/specs/save-flow.md #エントリポイント1)。
  */
 export default function RootLayout() {
+  return (
+    <ShareIntentProvider>
+      <RootLayoutNav />
+    </ShareIntentProvider>
+  );
+}
+
+function RootLayoutNav() {
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+  const { hasShareIntent } = useShareIntentContext();
 
   useEffect(() => {
     bootstrapDatabase()
       .then(() => setState("ready"))
       .catch(() => setState("error"));
   }, []);
+
+  useEffect(() => {
+    if (state === "ready" && hasShareIntent) {
+      router.push("/save");
+    }
+  }, [state, hasShareIntent]);
 
   if (state !== "ready") {
     return (

@@ -76,6 +76,7 @@
 
 `src/` 配下にプログラムのひな型（Expo Router 画面、ドメイン層、サービス層のスタブ）を作成済み。
 DB / Repository 層（Drizzle マイグレーション、`LocalSqliteRepository` 各実装、匿名 owner_id 起動処理）は
-実装済み（`imports`＝CSV 取り込みのみ後続フェーズとして未実装）。保存/手動登録・ホーム・ガチャ・
+実装済み（`imports`＝CSV 取り込みのみ後続フェーズとして未実装）。保存/手動登録（共有シート受信・
+テキスト内 URL 抽出・手動登録編集フォーム・保存タブ一覧）は実装済み。ホーム今日の一店・ガチャ・
 訪問記録などのサービス/UI 実処理はこれから実装する。構成は
 [docs/patterns/implementation-patterns.md](docs/patterns/implementation-patterns.md) を参照。
