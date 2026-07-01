@@ -100,6 +100,28 @@ src/
 ## マイグレーション / シード
 
 - Drizzle マイグレーションをコミット。起動時に未適用分を適用し、初回にシステムタグをシード（[schema](../database/schema.md)）。
+- 実装: `.sql` マイグレーションを Metro でそのまま `require` できるよう `metro.config.js`（`sourceExts` に `sql` 追加）と
+  `babel.config.js`（`babel-plugin-inline-import`）を設定。`src/data/sqlite/bootstrap.ts` が
+  `drizzle-orm/expo-sqlite/migrator` の `migrate()` → `ownerId.ts` の owner 解決 → `tagRepository.seedSystemTags()`
+  の順で実行し、ルートレイアウト（`src/app/_layout.tsx`）が完了までスプラッシュ的な待機画面を出す。
+- `docs/database/schema.md` の変更時は `npx drizzle-kit generate` でマイグレーションを再生成する。
+
+## データ層の実装パターン
+
+- **owner 解決**（[ADR 0003](../adr/0003-anonymous-auth-upgrade.md)）: `src/data/sqlite/ownerId.ts` の
+  `getOwnerId()` が `expo-secure-store` から読み書きし、`app_user` / `user_settings` の既定行を作成する。
+  各 Repository はコンストラクタ第2引数 `ownerIdProvider`（既定値 `getOwnerId`）を持ち、
+  結合テストではこれをフェイクに差し替えて `expo-secure-store` / `expo-sqlite` への依存を切る。
+- **行 ↔ ドメイン変換**: `src/data/sqlite/mappers.ts` に集約（snake_case行→camelCaseドメイン型、
+  タグの N+1 回避のためのバッチ読み込み、決定セッション+候補の組み立てなど）。複数 Repository から共有する。
+- **Repository 間の依存**: `SqliteDecisionRepository` は `pickCandidates` のために `RestaurantRepository` を
+  コンストラクタで受け取る（`src/data/sqlite/index.ts` で restaurants を先に生成してから渡す）。
+
+## テスト（Repository 結合）
+
+- `expo-sqlite` は Jest 上で動かないため、Repository の結合テストは `better-sqlite3` に同じ Drizzle スキーマを適用して行う
+  （`src/data/sqlite/testDb.ts` の `createTestDb()`）。生成済みマイグレーション SQL をそのまま再生してスキーマの乖離を防ぐ。
+- `expo-crypto`（ID 採番）は Jest 環境にネイティブ実装が無いため `jest.setup.js` で Node の `crypto.randomUUID` にモックする。
 
 ## 通知
 
