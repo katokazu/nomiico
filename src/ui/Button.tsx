@@ -4,14 +4,20 @@ interface ButtonProps {
   label: string;
   onPress: () => void;
   variant?: "primary" | "secondary";
+  disabled?: boolean;
 }
 
 /** 最小の再利用ボタン。実際に使うパターンだけ増やす (docs/patterns/implementation-patterns.md #まだ作らない)。 */
-export function Button({ label, onPress, variant = "primary" }: ButtonProps) {
+export function Button({ label, onPress, variant = "primary", disabled = false }: ButtonProps) {
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.base, variant === "secondary" && styles.secondary]}
+      disabled={disabled}
+      style={[
+        styles.base,
+        variant === "secondary" && styles.secondary,
+        disabled && styles.disabled,
+      ]}
     >
       <Text style={[styles.label, variant === "secondary" && styles.secondaryLabel]}>
         {label}
@@ -32,6 +38,9 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: "#208AEF",
+  },
+  disabled: {
+    opacity: 0.5,
   },
   label: {
     color: "#FFFFFF",
