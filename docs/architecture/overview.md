@@ -2,7 +2,7 @@
 
 ## 状況
 
-技術選定はまだ確定していません。
+技術選定は確定済み（[tech-stack.md](tech-stack.md) / [docs/adr/INDEX.md](../adr/INDEX.md)）。`src/`配下にプログラムのひな型を作成済みで、実処理はこれから実装する（[implementation-patterns](../patterns/implementation-patterns.md)）。
 
 ## 想定されるシステム責務
 

@@ -20,41 +20,49 @@
 最初の実装が入ったら、実際に使われているパターンだけを文書化してください。
 技術選定は [tech-stack](../architecture/tech-stack.md)。ここでは実装時に従う具体パターンを定義する。コードが無い段階のため「最初に従うべき規約」として記述し、実装後に実態へ合わせて更新する。
 
-## プロジェクト構成（想定）
+## プロジェクト構成
+
+ソースのルートフォルダは `src/` に統一する。`expo-router` は `app/` に加え `src/app/` も規定のルートとして自動認識するため、ルーティングも含めて全体を `src/` 配下に置ける。
 
 ```text
-app/                      # expo-router 画面（ファイルベースルーティング）
-  (tabs)/
-    index.tsx             # ホーム「今日どこ行く？」
-    saved.tsx             # 保存したお店
-  decide/
-    gacha.tsx
-    swipe.tsx
-    result.tsx
-  restaurant/[id].tsx     # 店舗詳細
-  save.tsx                # 共有/手動保存の保存完了画面
-  settings.tsx
 src/
-  domain/                 # 型・ドメインロジック（ストレージ非依存・純粋）
+  app/                      # expo-router 画面（ファイルベースルーティング）
+    _layout.tsx
+    (tabs)/
+      _layout.tsx
+      index.tsx             # ホーム「今日の一店」
+      saved.tsx              # 保存タブ
+      records.tsx             # 記録タブ（思い出）
+    decide/
+      gacha.tsx
+      swipe.tsx
+      together.tsx           # みんなで（投票制/順位制）
+      result.tsx
+    restaurant/[id].tsx      # 店舗詳細
+    restaurant-form.tsx       # 手動登録/編集の共通フォーム
+    save.tsx                  # 共有/手動保存の保存完了画面
+    settings.tsx
+  domain/                   # 型・ドメインロジック（ストレージ非依存・純粋）
     models.ts
     scoring.ts
     decisionEngine.ts
     urlNormalize.ts
   data/
-    repository.ts         # Repository インターフェース
-    sqlite/               # LocalSqliteRepository 実装
-      schema.ts           # Drizzle スキーマ
+    repository.ts           # Repository インターフェース
+    sqlite/                 # LocalSqliteRepository 実装
+      client.ts              # expo-sqlite + Drizzle 接続
+      schema.ts               # Drizzle スキーマ
       migrations/
-      restaurantRepo.ts
+      restaurantRepository.ts
       ...
   services/
     saveService.ts
-    ogp.ts                # OGP 取得（セキュリティ制約込み）
+    ogp.ts                   # OGP 取得（セキュリティ制約込み）
     resurfacing.ts
-  state/                  # Zustand ストア（決定セッション一時状態など）
-  ui/                     # 再利用コンポーネント
-config/
-  scoring.ts              # スコア重み等の調整値
+  state/                    # Zustand ストア（決定セッション一時状態など）
+  ui/                       # 再利用コンポーネント
+  config/
+    scoring.ts               # スコア重み等の調整値
 ```
 
 ## ルーティング

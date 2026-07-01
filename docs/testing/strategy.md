@@ -2,7 +2,7 @@
 
 ## 現在の状況
 
-テストフレームワークはまだ選定されていません。
+テストフレームワークは決定済み（[tech-stack](../architecture/tech-stack.md)、Jest + jest-expo）。ひな型に`urlNormalize`/`decisionEngine`のユニットテストを配置済み。
 
 ## MVPで重視するテスト
 
