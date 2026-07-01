@@ -1,13 +1,34 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
+
+import { bootstrapDatabase } from "@/data/sqlite/bootstrap";
 
 const queryClient = new QueryClient();
 
 /**
  * ルートレイアウト (docs/patterns/implementation-patterns.md #ルーティング)。
  * 永続データはTanStack Query経由でRepositoryを呼ぶ。
+ * マイグレーション/owner初期化/システムタグシードが終わるまで画面を出さない。
  */
 export default function RootLayout() {
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    bootstrapDatabase()
+      .then(() => setState("ready"))
+      .catch(() => setState("error"));
+  }, []);
+
+  if (state !== "ready") {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>{state === "error" ? "初期化に失敗しました" : "準備中..."}</Text>
+      </View>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <Stack screenOptions={{ headerShown: false }}>
