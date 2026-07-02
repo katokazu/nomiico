@@ -32,6 +32,10 @@
 - [architecture/tech-stack.md](architecture/tech-stack.md)
 - [adr/INDEX.md](adr/INDEX.md)
 
+### ローカル環境構築・ビルド
+
+- [architecture/android-windows-build.md](architecture/android-windows-build.md): Windows での Android ローカルビルド
+
 ### データベース作業
 
 - [database/INDEX.md](database/INDEX.md)
